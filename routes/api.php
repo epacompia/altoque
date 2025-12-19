@@ -3,7 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SMSController;
-
+use App\Http\Controllers\UserController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -22,6 +22,6 @@ Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
 Route::post('/send-otp', [SMSController::class, 'sendOTP']);
 Route::post('/verify-otp', [SMSController::class, 'verifyOTP']);
 
-Route::middleware('auth:sanctum')->get('/user', function (\Illuminate\Http\Request $request) {
-    return response()->json($request->user());
-});
+//Route::middleware('auth:sanctum')->put('/user/update', [UserController::class, 'update']);
+//Route::put('/user/update', [UserController::class, 'update']);
+Route::middleware('auth:sanctum')->put('/user/update', [UserController::class, 'update']);

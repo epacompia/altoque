@@ -1,0 +1,649 @@
+{
+	"info": {
+		"_postman_id": "rf18-commission-testing",
+		"name": "RF18 - SISTEMA DE COMISIONES",
+		"description": "Pruebas para RF18: Cálculo automático de comisiones por pedido",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "31556369"
+	},
+	"item": [
+		{
+			"name": "RF18 - Setup 0 - Login como Admin (admin)",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8000/api/test-token?user_type=admin",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"test-token"
+					],
+					"query": [
+						{
+							"key": "user_type",
+							"value": "admin"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "RF18 - Setup 1 - Login como Cliente (cliente)",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8000/api/test-token?user_type=cliente",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"test-token"
+					],
+					"query": [
+						{
+							"key": "user_type",
+							"value": "cliente"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "RF18 - Setup 2 - Login como Vendedor (vendedor)",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8000/api/test-token?user_type=vendedor",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"test-token"
+					],
+					"query": [
+						{
+							"key": "user_type",
+							"value": "vendedor"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "RF18 - Test 1 - Crear Regla de Comisión Base (admin)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer TOKEN_ADMIN_AQUI",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"nombre\": \"Comisión Base\",\n  \"tipo\": \"base\",\n  \"porcentaje_comision\": 10,\n  \"activa\": true,\n  \"notas\": \"Comisión por defecto para todos los pedidos\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8000/api/comisiones/reglas",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"comisiones",
+						"reglas"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "RF18 - Test 2 - Crear Regla para Bebidas (admin)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer TOKEN_ADMIN_AQUI",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"nombre\": \"Comisión Bebidas\",\n  \"tipo\": \"category\",\n  \"porcentaje_comision\": 15,\n  \"category_id\": \"2\",\n  \"activa\": true,\n  \"notas\": \"Comisión especial para bebidas: 15%\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8000/api/comisiones/reglas",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"comisiones",
+						"reglas"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "RF18 - Test 3 - Crear Regla por Rango de Precio (admin)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer TOKEN_ADMIN_AQUI",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"nombre\": \"Comisión Pedidos Grandes\",\n  \"tipo\": \"price_range\",\n  \"porcentaje_comision\": 12,\n  \"monto_minimo\": 100,\n  \"monto_maximo\": 999999,\n  \"activa\": true,\n  \"notas\": \"Comisión reducida para pedidos mayores a S/100\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8000/api/comisiones/reglas",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"comisiones",
+						"reglas"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "RF18 - Test 4 - Crear Regla para Vendedor Premium (admin)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer TOKEN_ADMIN_AQUI",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"nombre\": \"Comisión Vendedor Premium\",\n  \"tipo\": \"vendor_type\",\n  \"porcentaje_comision\": 8,\n  \"tipo_vendedor\": \"premium\",\n  \"activa\": true,\n  \"notas\": \"Comisión reducida para vendedores premium (más de 1000 ventas)\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8000/api/comisiones/reglas",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"comisiones",
+						"reglas"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "RF18 - Test 5 - Listar Todas las Reglas Activas (admin)",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer TOKEN_ADMIN_AQUI",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8000/api/comisiones/reglas?activas=true",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"comisiones",
+						"reglas"
+					],
+					"query": [
+						{
+							"key": "activas",
+							"value": "true"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "RF18 - Test 6 - Crear Pedido con Múltiples Productos (cliente)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer TOKEN_CLIENTE_AQUI",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"stall_id\": 2,\n  \"productos\": [\n    {\n      \"producto_id\": 1,\n      \"cantidad\": 2,\n      \"cremas\": []\n    },\n    {\n      \"producto_id\": 3,\n      \"cantidad\": 1,\n      \"cremas\": [1]\n    }\n  ],\n  \"direccion\": \"Jr. Manco Cápac 456, La Breña, Lima\",\n  \"with_delivery\": true,\n  \"notas\": \"Test RF18 - Para calcular comisión\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8000/api/pedidos",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"pedidos"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "RF18 - Test 7 - Procesar Pago del Pedido (cliente)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer TOKEN_CLIENTE_AQUI",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"metodo_pago\": \"mock\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8000/api/pedidos/1/pagar",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"pedidos",
+						"1",
+						"pagar"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "RF18 - Test 8 - Calcular Comisión del Pedido Pagado (cliente)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer TOKEN_CLIENTE_AQUI",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"order_id\": 1\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8000/api/comisiones/calcular",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"comisiones",
+						"calcular"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "RF18 - Test 9 - Obtener Detalles de Comisión Calculada (cliente)",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer TOKEN_CLIENTE_AQUI",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8000/api/comisiones/pedido/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"comisiones",
+						"pedido",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "RF18 - Test 10 - Actualizar Comisión Base de 10% a 11% (admin)",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer TOKEN_ADMIN_AQUI",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"porcentaje_comision\": 11,\n  \"notas\": \"Aumentada temporalmente a 11% por campaña especial\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8000/api/comisiones/reglas/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"comisiones",
+						"reglas",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "RF18 - Test 11 - Obtener Reporte de Comisiones por Período (admin)",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer TOKEN_ADMIN_AQUI",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8000/api/comisiones/reporte?desde=2026-02-01&hasta=2026-02-28",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"comisiones",
+						"reporte"
+					],
+					"query": [
+						{
+							"key": "desde",
+							"value": "2026-02-01"
+						},
+						{
+							"key": "hasta",
+							"value": "2026-02-28"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "RF18 - Test 12 - Consultar Auditoría de Cambios en Comisiones (admin)",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer TOKEN_ADMIN_AQUI",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8000/api/comisiones/auditoria?desde=2026-02-01&hasta=2026-02-28",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"comisiones",
+						"auditoria"
+					],
+					"query": [
+						{
+							"key": "desde",
+							"value": "2026-02-01"
+						},
+						{
+							"key": "hasta",
+							"value": "2026-02-28"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "RF18 - Test 13 - Desactivar una Regla de Comisión (admin)",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer TOKEN_ADMIN_AQUI",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8000/api/comisiones/reglas/4",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"comisiones",
+						"reglas",
+						"4"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "RF18 - Test 14 - Crear Regla con Vigencia Temporal Fiestas Patrias (admin)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer TOKEN_ADMIN_AQUI",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"nombre\": \"Comisión Fiestas Patrias\",\n  \"tipo\": \"base\",\n  \"porcentaje_comision\": 18,\n  \"vigencia_desde\": \"2026-07-28\",\n  \"vigencia_hasta\": \"2026-08-02\",\n  \"activa\": true,\n  \"notas\": \"Comisión especial para la campaña de Fiestas Patrias\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8000/api/comisiones/reglas",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"comisiones",
+						"reglas"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "RF18 - Test 15 - Error: Porcentaje Fuera de Rango (admin)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer TOKEN_ADMIN_AQUI",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"nombre\": \"Regla Inválida\",\n  \"tipo\": \"base\",\n  \"porcentaje_comision\": 8,\n  \"activa\": true\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8000/api/comisiones/reglas",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"comisiones",
+						"reglas"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "RF18 - Test 16 - Error: Calcular Comisión sin Pagar Pedido (cliente)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer TOKEN_CLIENTE_AQUI",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"order_id\": 2\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8000/api/comisiones/calcular",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"comisiones",
+						"calcular"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

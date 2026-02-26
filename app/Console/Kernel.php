@@ -22,6 +22,13 @@ class Kernel extends ConsoleKernel
     {
         $this->load(__DIR__.'/Commands');
 
+        // Register invoicing commands
+        if (class_exists(\App\Console\Commands\RetryFailedInvoices::class)) {
+            $this->commands([
+                \App\Console\Commands\RetryFailedInvoices::class,
+            ]);
+        }
+
         require base_path('routes/console.php');
     }
 }

@@ -1,0 +1,183 @@
+{
+  "info": {
+    "name": "RF13 - TIEMPO ESTIMADO DE ENTREGA",
+    "description": "Configurar tiempos de preparación y ver tiempo estimado en pedidos",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "RF13 - Test 0 - Login Vendedor (obtener token)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8000/api/test-token?user_type=vendedor",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["api", "test-token"],
+          "query": [
+            {
+              "key": "user_type",
+              "value": "vendedor"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "RF13 - Test 1 - Configurar tiempos de preparación del puesto",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer TOKEN_DEL_VENDEDOR",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"base_preparation_time\": 20,\n  \"time_per_product\": 3,\n  \"time_per_active_order\": 4,\n  \"time_for_delivery\": 15\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8000/api/mis-puesto/tiempos-preparacion",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["api", "mis-puesto", "tiempos-preparacion"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "RF13 - Test 2 - Login Cliente (para crear pedido)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8000/api/test-token?user_type=cliente",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["api", "test-token"],
+          "query": [
+            {
+              "key": "user_type",
+              "value": "cliente"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "RF13 - Test 3 - Crear pedido (calcula tiempo estimado automáticamente)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer TOKEN_DEL_CLIENTE",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"stall_id\": 2,\n  \"productos\": [\n    {\n      \"producto_id\": 1,\n      \"cantidad\": 1,\n      \"cremas\": []\n    }\n  ],\n  \"direccion\": \"Jr. Lima 123\",\n  \"with_delivery\": true,\n  \"notas\": \"Rápido por favor\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8000/api/pedidos",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["api", "pedidos"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "RF13 - Test 4 - Ver detalle pedido con estimated_delivery_at",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer TOKEN_DEL_CLIENTE",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:8000/api/pedidos/1",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["api", "pedidos", "1"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "RF13 - Test 5 - Crear otro pedido (suma carga de órdenes activas)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer TOKEN_DEL_CLIENTE",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"stall_id\": 2,\n  \"productos\": [\n    {\n      \"producto_id\": 2,\n      \"cantidad\": 2,\n      \"cremas\": [1]\n    },\n    {\n      \"producto_id\": 3,\n      \"cantidad\": 1\n    }\n  ],\n  \"direccion\": \"Jr. Arequipa 456\",\n  \"with_delivery\": false,\n  \"notas\": \"Sin cebolla\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8000/api/pedidos",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["api", "pedidos"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "RF13 - Test 6 - Comparar tiempos: 2do pedido tiene más tiempo (más carga)",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer TOKEN_DEL_CLIENTE",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:8000/api/pedidos/2",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["api", "pedidos", "2"]
+        }
+      },
+      "response": []
+    }
+  ]
+}

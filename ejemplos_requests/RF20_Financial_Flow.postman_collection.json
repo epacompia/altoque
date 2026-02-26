@@ -1,0 +1,177 @@
+{
+  "info": {
+    "_postman_id": "rf20-financial-flow-0001",
+    "name": "RF20 - FLUJO FINANCIERO (TRANSFERENCIAS)",
+    "description": "Pruebas para RF20: retención en cuenta empresa, cálculo de comisión y transferencia al vendedor (mock).",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "000000"
+  },
+  "item": [
+    {
+      "name": "RF20 - Setup 0 - Obtener token de cliente (test)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8000/api/test-token?user_type=cliente",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["api", "test-token"],
+          "query": [{ "key": "user_type", "value": "cliente" }]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "RF20 - Test 1 - Crear pedido (cliente) - con delivery y coords",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Authorization", "value": "Bearer TOKEN_CLIENTE_AQUI", "type": "text" },
+          { "key": "Content-Type", "value": "application/json", "type": "text" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"stall_id\": 2,\n  \"productos\": [{\"producto_id\": 1, \"cantidad\": 1, \"cremas\": []}],\n  \"direccion\": \"Jr. Lima 123\",\n  \"with_delivery\": true,\n  \"delivery_latitude\": -12.046374,\n  \"delivery_longitude\": -77.042793,\n  \"notas\": \"Prueba RF20\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8000/api/pedidos",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["api", "pedidos"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "RF20 - Test 2 - Pagar pedido (mock)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Authorization", "value": "Bearer TOKEN_CLIENTE_AQUI", "type": "text" },
+          { "key": "Content-Type", "value": "application/json", "type": "text" }
+        ],
+        "body": { "mode": "raw", "raw": "{ \"metodo_pago\": \"mock\" }" },
+        "url": {
+          "raw": "http://localhost:8000/api/pedidos/1/pagar",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["api", "pedidos", "1", "pagar"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "RF20 - Test 3 - Ver pedido (detalles & delivery_cost)",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer TOKEN_CLIENTE_AQUI", "type": "text" }
+        ],
+        "url": {
+          "raw": "http://localhost:8000/api/pedidos/1",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["api", "pedidos", "1"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "RF20 - Test 4 - Calcular comisión (admin) - opcional",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Authorization", "value": "Bearer TOKEN_ADMIN_AQUI", "type": "text" },
+          { "key": "Content-Type", "value": "application/json", "type": "text" }
+        ],
+        "body": { "mode": "raw", "raw": "{ \"order_id\": 1 }" },
+        "url": {
+          "raw": "http://localhost:8000/api/comisiones/calcular",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["api", "comisiones", "calcular"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "RF20 - Test 5 - Obtener comisión del pedido",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer TOKEN_ADMIN_AQUI", "type": "text" }
+        ],
+        "url": {
+          "raw": "http://localhost:8000/api/comisiones/pedido/1",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["api", "comisiones", "pedido", "1"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "RF20 - Test 6 - Transferir comisiones pendientes (admin) - mock",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Authorization", "value": "Bearer TOKEN_ADMIN_AQUI", "type": "text" },
+          { "key": "Content-Type", "value": "application/json", "type": "text" }
+        ],
+        "body": { "mode": "raw", "raw": "{ \"method\": \"mock\" }" },
+        "url": {
+          "raw": "http://localhost:8000/api/comisiones/transferir",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["api", "comisiones", "transferir"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "RF20 - Test 7 - Ver comisión después de transferencia",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer TOKEN_ADMIN_AQUI", "type": "text" }
+        ],
+        "url": {
+          "raw": "http://localhost:8000/api/comisiones/pedido/1",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["api", "comisiones", "pedido", "1"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "RF20 - Test 8 - Cancelar pedido (cliente) - probar reembolso",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          { "key": "Authorization", "value": "Bearer TOKEN_CLIENTE_AQUI", "type": "text" },
+          { "key": "Content-Type", "value": "application/json", "type": "text" }
+        ],
+        "body": { "mode": "raw", "raw": "{ \"motivo\": \"Prueba cancelación RF20\" }" },
+        "url": {
+          "raw": "http://localhost:8000/api/pedidos/1/cancelar",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["api", "pedidos", "1", "cancelar"]
+        }
+      },
+      "response": []
+    }
+  ],
+  "variable": []
+}

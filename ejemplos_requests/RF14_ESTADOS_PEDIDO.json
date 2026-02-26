@@ -1,0 +1,222 @@
+{
+  "info": {
+    "name": "RF14 - ESTADOS DEL PEDIDO",
+    "description": "Cambiar estados: confirmed → preparing → ready → delivered (Solo Vendedor)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "RF14 - Test 0 - Login Vendedor (obtener token)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8000/api/test-token?user_type=vendedor",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["api", "test-token"],
+          "query": [
+            {
+              "key": "user_type",
+              "value": "vendedor"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "RF14 - Test 1 - Ver pedidos activos del puesto (confirmed)",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer TOKEN_DEL_VENDEDOR",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:8000/api/mis-pedidos",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["api", "mis-pedidos"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "RF14 - Test 2 - Cambiar estado a PREPARING (comenzar preparación)",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer TOKEN_DEL_VENDEDOR",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"nuevo_estado\": \"preparing\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8000/api/pedidos/1/cambiar-estado",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["api", "pedidos", "1", "cambiar-estado"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "RF14 - Test 3 - Cambiar estado a READY (pedido listo para recoger)",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer TOKEN_DEL_VENDEDOR",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"nuevo_estado\": \"ready\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8000/api/pedidos/1/cambiar-estado",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["api", "pedidos", "1", "cambiar-estado"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "RF14 - Test 4 - Cambiar estado a EN_CAMINO (si tiene delivery)",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer TOKEN_DEL_VENDEDOR",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"nuevo_estado\": \"en_camino\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8000/api/pedidos/1/cambiar-estado",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["api", "pedidos", "1", "cambiar-estado"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "RF14 - Test 5 - Cambiar estado a DELIVERED (pedido entregado)",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer TOKEN_DEL_VENDEDOR",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"nuevo_estado\": \"delivered\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8000/api/pedidos/1/cambiar-estado",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["api", "pedidos", "1", "cambiar-estado"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "RF14 - Test 6 - Ver timeline completo del pedido (como cliente)",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer TOKEN_DEL_CLIENTE",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:8000/api/pedidos/1",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["api", "pedidos", "1"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "RF14 - Test 7 - Error: Transición inválida (no permitida)",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer TOKEN_DEL_VENDEDOR",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"nuevo_estado\": \"pending\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8000/api/pedidos/1/cambiar-estado",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["api", "pedidos", "1", "cambiar-estado"]
+        }
+      },
+      "response": []
+    }
+  ]
+}

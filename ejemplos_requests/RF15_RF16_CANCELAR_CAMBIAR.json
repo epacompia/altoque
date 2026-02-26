@@ -1,0 +1,291 @@
+{
+  "info": {
+    "name": "RF15 + RF16 - CANCELAR Y CAMBIAR DIRECCIÓN",
+    "description": "RF15: Cancelar pedido | RF16: Cambiar dirección de entrega",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "RF15 + RF16 - Test 0 - Login Cliente",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8000/api/test-token?user_type=cliente",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["api", "test-token"],
+          "query": [
+            {
+              "key": "user_type",
+              "value": "cliente"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "RF15 + RF16 - Test 1 - Crear pedido (para cancelar después)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer TOKEN_DEL_CLIENTE",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"stall_id\": 2,\n  \"productos\": [\n    {\n      \"producto_id\": 1,\n      \"cantidad\": 1,\n      \"cremas\": []\n    }\n  ],\n  \"direccion\": \"Jr. Manco Cápac 123\",\n  \"with_delivery\": true,\n  \"notas\": \"Test cancelación\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8000/api/pedidos",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["api", "pedidos"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "RF16 - Test 2 - Cambiar dirección (antes de pagar)",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer TOKEN_DEL_CLIENTE",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"nueva_direccion\": \"Jr. Arequipa 456, Departamento 5B, La Breña, Lima\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8000/api/pedidos/1/cambiar-direccion",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["api", "pedidos", "1", "cambiar-direccion"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "RF16 - Test 3 - Ver pedido con dirección actualizada",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer TOKEN_DEL_CLIENTE",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:8000/api/pedidos/1",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["api", "pedidos", "1"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "RF15 - Test 4 - Cancelar pedido (estado pending)",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer TOKEN_DEL_CLIENTE",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"motivo\": \"Cambié de opinión\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8000/api/pedidos/1/cancelar",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["api", "pedidos", "1", "cancelar"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "RF15 - Test 5 - Crear pedido para pagar (después cancelar en estado confirming)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer TOKEN_DEL_CLIENTE",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"stall_id\": 2,\n  \"productos\": [\n    {\n      \"producto_id\": 2,\n      \"cantidad\": 1,\n      \"cremas\": [1]\n    }\n  ],\n  \"direccion\": \"Jr. Huancayo 789\",\n  \"with_delivery\": false,\n  \"notas\": \"Test otro cancelación\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8000/api/pedidos",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["api", "pedidos"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "RF15 - Test 6 - Pagar ese pedido (para testear cancelación en confirmed)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer TOKEN_DEL_CLIENTE",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"metodo_pago\": \"mock\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8000/api/pedidos/2/pagar",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["api", "pedidos", "2", "pagar"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "RF15 - Test 7 - Cancelar pedido en estado confirmed",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer TOKEN_DEL_CLIENTE",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"motivo\": \"Ya no necesito el pedido\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8000/api/pedidos/2/cancelar",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["api", "pedidos", "2", "cancelar"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "RF15 - Test 8 - Error: No se puede cancelar pedido en preparing (demasiado tarde)",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer TOKEN_DEL_CLIENTE",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"motivo\": \"Intento fallido de cancelación\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8000/api/pedidos/3/cancelar",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["api", "pedidos", "3", "cancelar"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "RF16 - Test 9 - Error: No se puede cambiar dirección en pedido confirmado si está en preparing",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer TOKEN_DEL_CLIENTE",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"nueva_direccion\": \"Jr. Nueva 999\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8000/api/pedidos/3/cambiar-direccion",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["api", "pedidos", "3", "cambiar-direccion"]
+        }
+      },
+      "response": []
+    }
+  ]
+}

@@ -1,0 +1,188 @@
+{
+  "info": {
+    "name": "ALTOQUE - RF11 COMPLETO (Con Autenticación)",
+    "description": "Flujo completo: Login → Obtener Token → Crear Pedido → Pagar → Ver Detalles",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "PASO 0: Login Cliente (Obtener Token)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"cliente@test.com\",\n  \"password\": \"password123\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8000/auth/login",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["auth", "login"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "RF11 - Paso 1: Crear Pedido (SIN pagar)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer PEGA_AQUI_EL_TOKEN_DEL_LOGIN",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"stall_id\": 1,\n  \"productos\": [\n    {\n      \"producto_id\": 1,\n      \"cantidad\": 2,\n      \"cremas\": [1, 2]\n    },\n    {\n      \"producto_id\": 3,\n      \"cantidad\": 1\n    }\n  ],\n  \"direccion\": \"Jr. Manco Cápac 456, La Breña, Lima\",\n  \"with_delivery\": true,\n  \"notas\": \"Sin cebolla por favor\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8000/api/pedidos",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["api", "pedidos"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "RF11 - Paso 2: Procesar Pago del Pedido",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer PEGA_AQUI_EL_TOKEN_DEL_LOGIN",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"metodo_pago\": \"mock\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8000/api/pedidos/1/pagar",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["api", "pedidos", "1", "pagar"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "RF12 - Paso 3: Obtener Detalle del Pedido",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer PEGA_AQUI_EL_TOKEN_DEL_LOGIN",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:8000/api/pedidos/1",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["api", "pedidos", "1"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "RF12 - Paso 4: Listar Todos mis Pedidos",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer PEGA_AQUI_EL_TOKEN_DEL_LOGIN",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:8000/api/pedidos?page=1",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["api", "pedidos"],
+          "query": [
+            {
+              "key": "page",
+              "value": "1"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "PASO 0b: Login Vendedor (Para ver ordenes)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"vendedor@test.com\",\n  \"password\": \"password123\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8000/auth/login",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["auth", "login"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "RF17 - Paso 5: Ver Pedidos Activos (Vendedor)",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer PEGA_AQUI_EL_TOKEN_DEL_VENDEDOR",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:8000/api/mis-pedidos",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["api", "mis-pedidos"]
+        }
+      },
+      "response": []
+    }
+  ]
+}

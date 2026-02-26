@@ -1,0 +1,27 @@
+{
+  "message": "¡Felicitaciones! Ahora eres vendedor",
+  "usuario": {
+    "id": 1,
+    "nombre": "Juan Carlos Pérez García",
+    "email": "juan.carlos@example.com",
+    "rol": "vendor",
+    "nombre_puesto": "Juan",
+    "apellido": "Carlos Pérez García"
+  },
+  "puesto": {
+    "id": 1,
+    "nombre": "Salchipapas del Barrio",
+    "slug": "salchipapas-del-barrio",
+    "seller_id": 1,
+    "direccion": "Jr. Manco Cápac 456, La Breña, Lima",
+    "telefono": "+51987654321",
+    "horario_apertura": "11:00:00",
+    "horario_cierre": "23:30:00",
+    "latitud": "-12.06930000",
+    "longitud": "-77.07030000",
+    "descripcion": "Las más deliciosas salchipapas con crema especial casera",
+    "activo": true,
+    "qr_path": null,
+    "creado_en": "2026-01-04T15:45:30Z"
+  }
+}

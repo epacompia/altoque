@@ -1,0 +1,138 @@
+{
+  "info": {
+    "name": "RF11 - PEDIDOS Y PAGOS (SEPARADOS)",
+    "description": "Paso 1: Crear pedido (pendiente) | Paso 2: Procesar pago | Paso 3: Ver detalle",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "RF11 - Test1: Crear pedido (sin pagar aún)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer TOKEN_CLIENTE",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"stall_id\": 1,\n  \"productos\": [\n    {\n      \"producto_id\": 1,\n      \"cantidad\": 2,\n      \"cremas\": [1, 2]\n    },\n    {\n      \"producto_id\": 3,\n      \"cantidad\": 1\n    }\n  ],\n  \"direccion\": \"Jr. Manco Cápac 456, La Breña, Lima\",\n  \"with_delivery\": true,\n  \"notas\": \"Sin cebolla por favor\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8000/api/pedidos",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["api", "pedidos"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "RF11 - Test2: Procesar pago del pedido",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer TOKEN_CLIENTE",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"metodo_pago\": \"mock\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8000/api/pedidos/1/pagar",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["api", "pedidos", "1", "pagar"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "RF12 - Test3: Obtener detalle del pedido",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer TOKEN_CLIENTE",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:8000/api/pedidos/1",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["api", "pedidos", "1"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "RF12 - Test4: Listar todos mis pedidos",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer TOKEN_CLIENTE",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:8000/api/pedidos?page=1",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["api", "pedidos"],
+          "query": [
+            {
+              "key": "page",
+              "value": "1"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "RF17 - Test5: Ver pedidos activos del puesto (vendedor)",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer TOKEN_VENDEDOR",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:8000/api/mis-pedidos",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["api", "mis-pedidos"]
+        }
+      },
+      "response": []
+    }
+  ]
+}

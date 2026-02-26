@@ -1,0 +1,103 @@
+{
+  "info": {
+    "_postman_id": "rf9-collection-id",
+    "name": "RF9 - Menú offline para vendedores",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "RF9 - Test 1 - Descargar menú offline - Perfil de vendedor",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer TOKEN_VENDEDOR_AQUI",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:8000/api/mis-productos/offline",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["api", "mis-productos", "offline"]
+        }
+      }
+    },
+    {
+      "name": "RF9 - Test 2 - Descargar menú offline - Perfil de vendedor sin puesto",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer TOKEN_SIN_PUESTO",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:8000/api/mis-productos/offline",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["api", "mis-productos", "offline"]
+        }
+      }
+    },
+    {
+      "name": "RF9 - Test 3 - Descargar menú offline - Perfil de cliente",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer TOKEN_CLIENTE_AQUI",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:8000/api/mis-productos/offline",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["api", "mis-productos", "offline"]
+        }
+      }
+    },
+    {
+      "name": "RF9 - Test 4 - Descargar menú offline - Perfil de admin",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer TOKEN_ADMIN_AQUI",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:8000/api/mis-productos/offline",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["api", "mis-productos", "offline"]
+        }
+      }
+    },
+    {
+      "name": "RF9 - Test 5 - Descargar menú offline - Sin token (no autenticado)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8000/api/mis-productos/offline",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["api", "mis-productos", "offline"]
+        }
+      }
+    }
+  ]
+}

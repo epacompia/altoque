@@ -1,0 +1,162 @@
+{
+  "info": {
+    "name": "RF10 - HORARIOS Y PAUSAS",
+    "description": "Ejemplos de requests para configurar horarios y pausas temporales del puesto",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "RF10 - Test1: Ver horarios actuales del puesto (apertura, cierre, estado)",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer TOKEN_AQUI",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:8000/api/mis-puesto/horarios",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["api", "mis-puesto", "horarios"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "RF10 - Test2: Actualizar horario de apertura y cierre del puesto",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer TOKEN_AQUI",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"horario_apertura\": \"10:00\",\n  \"horario_cierre\": \"23:30\",\n  \"activo\": true\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8000/api/mis-puesto/horarios",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["api", "mis-puesto", "horarios"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "RF10 - Test3: Crear pausa temporal (descanso, mantenimiento, etc.)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer TOKEN_AQUI",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"razon\": \"Descanso para almuerzo\",\n  \"inicio\": \"2026-01-17 13:00\",\n  \"fin\": \"2026-01-17 14:00\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8000/api/mis-puesto/pausas",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["api", "mis-puesto", "pausas"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "RF10 - Test4: Listar todas las pausas del puesto (historial completo)",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer TOKEN_AQUI",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:8000/api/mis-puesto/pausas",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["api", "mis-puesto", "pausas"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "RF10 - Test5: Actualizar pausa existente (razón, horario o estado)",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer TOKEN_AQUI",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"razon\": \"Descanso para almuerzo - extendido\",\n  \"fin\": \"2026-01-17 14:30\",\n  \"activa\": true\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8000/api/mis-puesto/pausas/1",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["api", "mis-puesto", "pausas", "1"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "RF10 - Test6: Eliminar pausa (cancelar pausa temporal)",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer TOKEN_AQUI",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:8000/api/mis-puesto/pausas/1",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["api", "mis-puesto", "pausas", "1"]
+        }
+      },
+      "response": []
+    }
+  ]
+}

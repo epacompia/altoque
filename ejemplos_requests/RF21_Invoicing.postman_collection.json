@@ -1,0 +1,56 @@
+{
+  "info": {
+    "_postman_id": "rf21-invoicing-0001",
+    "name": "RF21 - COMPROBANTES ELECTRÓNICOS (API)",
+    "description": "Colección para probar RF21: generación, descarga y reintentos de comprobantes electrónicos (mock OSE).",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "000000"
+  },
+  "item": [
+    {
+      "name": "RF21 - Setup 0 - Obtener token Cliente (test)",
+      "request": {"method":"GET","header":[],"url":{"raw":"http://localhost:8000/api/test-token?user_type=cliente","protocol":"http","host":["localhost"],"port":"8000","path":["api","test-token"],"query":[{"key":"user_type","value":"cliente"}] }},
+      "response": []
+    },
+    {
+      "name": "RF21 - Setup 1 - Obtener token Admin (test)",
+      "request": {"method":"GET","header":[],"url":{"raw":"http://localhost:8000/api/test-token?user_type=admin","protocol":"http","host":["localhost"],"port":"8000","path":["api","test-token"],"query":[{"key":"user_type","value":"admin"}] }},
+      "response": []
+    },
+    {
+      "name": "RF21 - Test 1 - Generar comprobante para pedido (cliente)",
+      "request": {
+        "method": "POST",
+        "header": [{"key":"Authorization","value":"Bearer TOKEN_CLIENTE_AQUI","type":"text"}],
+        "url": {"raw":"http://localhost:8000/api/comprobantes/generar/1","protocol":"http","host":["localhost"],"port":"8000","path":["api","comprobantes","generar","1"]}
+      },
+      "response": []
+    },
+    {
+      "name": "RF21 - Test 2 - Listar comprobantes (cliente/admin)",
+      "request": {"method":"GET","header":[{"key":"Authorization","value":"Bearer TOKEN_CLIENTE_AQUI","type":"text"}],"url":{"raw":"http://localhost:8000/api/comprobantes","protocol":"http","host":["localhost"],"port":"8000","path":["api","comprobantes"]}},
+      "response": []
+    },
+    {
+      "name": "RF21 - Test 3 - Ver metadata comprobante",
+      "request": {"method":"GET","header":[{"key":"Authorization","value":"Bearer TOKEN_CLIENTE_AQUI","type":"text"}],"url":{"raw":"http://localhost:8000/api/comprobantes/1","protocol":"http","host":["localhost"],"port":"8000","path":["api","comprobantes","1"]}},
+      "response": []
+    },
+    {
+      "name": "RF21 - Test 4 - Descargar PDF",
+      "request": {"method":"GET","header":[{"key":"Authorization","value":"Bearer TOKEN_CLIENTE_AQUI","type":"text"}],"url":{"raw":"http://localhost:8000/api/comprobantes/1/pdf","protocol":"http","host":["localhost"],"port":"8000","path":["api","comprobantes","1","pdf"]}},
+      "response": []
+    },
+    {
+      "name": "RF21 - Test 5 - Descargar XML",
+      "request": {"method":"GET","header":[{"key":"Authorization","value":"Bearer TOKEN_CLIENTE_AQUI","type":"text"}],"url":{"raw":"http://localhost:8000/api/comprobantes/1/xml","protocol":"http","host":["localhost"],"port":"8000","path":["api","comprobantes","1","xml"]}},
+      "response": []
+    },
+    {
+      "name": "RF21 - Test 6 - Reintentar generación (admin)",
+      "request": {"method":"POST","header":[{"key":"Authorization","value":"Bearer TOKEN_ADMIN_AQUI","type":"text"}],"url":{"raw":"http://localhost:8000/api/comprobantes/1/reintentar","protocol":"http","host":["localhost"],"port":"8000","path":["api","comprobantes","1","reintentar"]}},
+      "response": []
+    }
+  ],
+  "variable": []
+}

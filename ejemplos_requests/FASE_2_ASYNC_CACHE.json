@@ -1,0 +1,243 @@
+{
+  "info": {
+    "name": "FASE 2 - Optimizaciones (Async Payments + Cache)",
+    "description": "Testing de la Fase 2: Queue async para pagos + Redis caching para horarios/pausas",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "1. Generar Token",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8000/api/test-token?user_type=cliente",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["api", "test-token"],
+          "query": [{"key": "user_type", "value": "cliente"}]
+        },
+        "description": "Generar token para cliente (para testing sin Google OAuth)"
+      },
+      "response": []
+    },
+    {
+      "name": "2. Obtener Horarios (Primera vez - BD)",
+      "request": {
+        "method": "GET",
+        "header": [
+          {"key": "Authorization", "value": "Bearer {{token_vendedor}}", "type": "text"}
+        ],
+        "url": {
+          "raw": "http://localhost:8000/api/mis-puesto/horarios",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["api", "mis-puesto", "horarios"]
+        },
+        "description": "Obtener horarios - PRIMERA VEZ: Se carga desde BD (200ms aprox)\nVer timing en response headers"
+      },
+      "response": []
+    },
+    {
+      "name": "3. Obtener Horarios (Segunda vez - CACHE)",
+      "request": {
+        "method": "GET",
+        "header": [
+          {"key": "Authorization", "value": "Bearer {{token_vendedor}}", "type": "text"}
+        ],
+        "url": {
+          "raw": "http://localhost:8000/api/mis-puesto/horarios",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["api", "mis-puesto", "horarios"]
+        },
+        "description": "Obtener horarios - SEGUNDA VEZ: Se sirve desde Redis (~5ms)\nNota la diferencia de timing con la primera consulta"
+      },
+      "response": []
+    },
+    {
+      "name": "4. Actualizar Horarios (Invalida Cache)",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {"key": "Authorization", "value": "Bearer {{token_vendedor}}", "type": "text"},
+          {"key": "Content-Type", "value": "application/json"}
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"horario_apertura\": \"09:00\",\n  \"horario_cierre\": \"22:00\",\n  \"activo\": true\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8000/api/mis-puesto/horarios",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["api", "mis-puesto", "horarios"]
+        },
+        "description": "Actualizar horarios\nAutomáticamente INVALIDA el caché\n(Cache::forget es llamado)"
+      },
+      "response": []
+    },
+    {
+      "name": "5. Crear Pedido",
+      "request": {
+        "method": "POST",
+        "header": [
+          {"key": "Authorization", "value": "Bearer {{token_cliente}}", "type": "text"},
+          {"key": "Content-Type", "value": "application/json"}
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"stall_id\": 1,\n  \"productos\": [\n    {\n      \"producto_id\": 1,\n      \"cantidad\": 2,\n      \"cremas\": []\n    }\n  ],\n  \"direccion\": \"Av. Principal 123, Lima\",\n  \"with_delivery\": true,\n  \"notas\": \"Sin picante por favor\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8000/api/pedidos",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["api", "pedidos"]
+        },
+        "description": "Crear pedido en estado PENDING\nGuardar el order_id para los siguientes pasos"
+      },
+      "response": []
+    },
+    {
+      "name": "6. Pagar Pedido (ASYNC - Cola)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {"key": "Authorization", "value": "Bearer {{token_cliente}}", "type": "text"},
+          {"key": "Content-Type", "value": "application/json"}
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"metodo_pago\": \"mock\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8000/api/pedidos/{{order_id}}/pagar",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["api", "pedidos", "{{order_id}}", "pagar"]
+        },
+        "description": "FASE 2 - NUEVO FLUJO:\n1. Respuesta INMEDIATA (HTTP 202 Accepted)\n2. Pago se encolado en tabla 'jobs'\n3. Background worker lo procesará\n\nVER: Respuesta es rápida (~50-100ms) NO espera a procesar pago"
+      },
+      "response": []
+    },
+    {
+      "name": "7. Verificar Estado del Pedido",
+      "request": {
+        "method": "GET",
+        "header": [
+          {"key": "Authorization", "value": "Bearer {{token_cliente}}", "type": "text"}
+        ],
+        "url": {
+          "raw": "http://localhost:8000/api/pedidos/{{order_id}}",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["api", "pedidos", "{{order_id}}"]
+        },
+        "description": "Verificar si el pago fue procesado:\n- Si estado es 'confirmed': El job ya procesó\n- Si estado es 'pending': El job aún está en cola\n\nEn desarrollo, el job se procesa casi inmediatamente\nEn producción, podría tomar ms/segundos dependiendo de la carga"
+      },
+      "response": []
+    },
+    {
+      "name": "8. Listar Pausas (Primera vez - BD)",
+      "request": {
+        "method": "GET",
+        "header": [
+          {"key": "Authorization", "value": "Bearer {{token_vendedor}}", "type": "text"}
+        ],
+        "url": {
+          "raw": "http://localhost:8000/api/mis-puesto/pausas",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["api", "mis-puesto", "pausas"]
+        },
+        "description": "Listar pausas del puesto - PRIMERA VEZ: desde BD (200ms aprox)"
+      },
+      "response": []
+    },
+    {
+      "name": "9. Listar Pausas (Segunda vez - CACHE)",
+      "request": {
+        "method": "GET",
+        "header": [
+          {"key": "Authorization", "value": "Bearer {{token_vendedor}}", "type": "text"}
+        ],
+        "url": {
+          "raw": "http://localhost:8000/api/mis-puesto/pausas",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["api", "mis-puesto", "pausas"]
+        },
+        "description": "Listar pausas - SEGUNDA VEZ: desde Redis (~5ms)\nCompara timing con paso anterior"
+      },
+      "response": []
+    },
+    {
+      "name": "10. Crear Pausa (Invalida Cache)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {"key": "Authorization", "value": "Bearer {{token_vendedor}}", "type": "text"},
+          {"key": "Content-Type", "value": "application/json"}
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"razon\": \"Almuerzo del personal\",\n  \"inicio\": \"2026-02-03 13:00\",\n  \"fin\": \"2026-02-03 14:00\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8000/api/mis-puesto/pausas",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["api", "mis-puesto", "pausas"]
+        },
+        "description": "Crear pausa\nAutomáticamente INVALIDA caché de pausas\n(Cache::forget es llamado)"
+      },
+      "response": []
+    },
+    {
+      "name": "11. Consultar Pausas (Refresca BD)",
+      "request": {
+        "method": "GET",
+        "header": [
+          {"key": "Authorization", "value": "Bearer {{token_vendedor}}", "type": "text"}
+        ],
+        "url": {
+          "raw": "http://localhost:8000/api/mis-puesto/pausas",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["api", "mis-puesto", "pausas"]
+        },
+        "description": "Listar pausas DESPUÉS de crear una\nAhora incluye la pausa creada\nEl caché fue invalidado, así que se recarga desde BD"
+      },
+      "response": []
+    }
+  ],
+  "variable": [
+    {
+      "key": "token_cliente",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "token_vendedor",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "order_id",
+      "value": "",
+      "type": "string"
+    }
+  ]
+}

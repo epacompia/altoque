@@ -1,0 +1,49 @@
+{
+  "info": {
+    "_postman_id": "rf5-collection-id",
+    "name": "RF5 - Sugerencias dinámicas de platos/promociones",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "RF5 - Test 1 - Obtener sugerencias dinámicas por historial de consumo",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer TOKEN_CLIENTE_AQUI",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:8000/api/dashboard",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["api", "dashboard"]
+        }
+      }
+    },
+    {
+      "name": "RF5 - Test 2 - Sugerencias por defecto si no hay historial",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer TOKEN_CLIENTE_SIN_HISTORIAL",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:8000/api/dashboard",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["api", "dashboard"]
+        }
+      }
+    }
+  ]
+}

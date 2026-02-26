@@ -51,4 +51,12 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    /**
+     * Relación: Un usuario vendedor tiene un puesto de comida
+     */
+    public function foodStall()
+    {
+        return $this->hasOne(FoodStall::class, 'seller_id');
+    }
 }

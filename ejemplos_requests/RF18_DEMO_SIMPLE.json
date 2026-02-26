@@ -1,0 +1,316 @@
+{
+	"info": {
+		"_postman_id": "rf18-simple-demo",
+		"name": "RF18 - DEMO SIMPLE (5 PASOS)",
+		"description": "Flujo simplificado para demostrar RF18 en 5 pasos",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "31556369"
+	},
+	"item": [
+		{
+			"name": "RF18 - Setup 0 - Login como Admin (admin)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const response = pm.response.json();",
+							"pm.environment.set('token_admin', response.token);",
+							"console.log('✅ Token Admin guardado');"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8000/api/test-token?user_type=admin",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"test-token"
+					],
+					"query": [
+						{
+							"key": "user_type",
+							"value": "admin"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "RF18 - Test 1 - Crear Regla Base 10% (admin)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token_admin}}",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"nombre\": \"Comisión Base Demo\",\n  \"tipo\": \"base\",\n  \"porcentaje_comision\": 10,\n  \"activa\": true,\n  \"notas\": \"Demo RF18\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8000/api/comisiones/reglas",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"comisiones",
+						"reglas"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "RF18 - Test 2 - Crear Regla Rango de Precio (admin)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token_admin}}",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"nombre\": \"Pedidos Grandes Demo\",\n  \"tipo\": \"price_range\",\n  \"porcentaje_comision\": 12,\n  \"monto_minimo\": 100,\n  \"monto_maximo\": 999999,\n  \"activa\": true\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8000/api/comisiones/reglas",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"comisiones",
+						"reglas"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "RF18 - Setup 1 - Login como Cliente (cliente)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const response = pm.response.json();",
+							"pm.environment.set('token_cliente', response.token);",
+							"console.log('✅ Token Cliente guardado');"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8000/api/test-token?user_type=cliente",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"test-token"
+					],
+					"query": [
+						{
+							"key": "user_type",
+							"value": "cliente"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "RF18 - Test 3 - Crear Pedido con Productos (cliente)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const response = pm.response.json();",
+							"pm.environment.set('order_id', response.data.id);",
+							"console.log('✅ Order ID guardado:', response.data.id);"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token_cliente}}",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"stall_id\": 2,\n  \"productos\": [\n    {\n      \"producto_id\": 1,\n      \"cantidad\": 2,\n      \"cremas\": []\n    },\n    {\n      \"producto_id\": 2,\n      \"cantidad\": 1,\n      \"cremas\": []\n    }\n  ],\n  \"direccion\": \"Jr. Lima 123, Lima\",\n  \"with_delivery\": true,\n  \"notas\": \"Demo RF18\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8000/api/pedidos",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"pedidos"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "RF18 - Test 4 - Procesar Pago del Pedido (cliente)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token_cliente}}",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"metodo_pago\": \"mock\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8000/api/pedidos/{{order_id}}/pagar",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"pedidos",
+						"{{order_id}}",
+						"pagar"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "RF18 - Test 5 - Calcular Comisión del Pedido (cliente)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token_cliente}}",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"order_id\": {{order_id}}\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8000/api/comisiones/calcular",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"comisiones",
+						"calcular"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "RF18 - Test 6 - Reporte de Comisiones por Período (admin)",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token_admin}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8000/api/comisiones/reporte?desde=2026-02-01&hasta=2026-02-28",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"comisiones",
+						"reporte"
+					],
+					"query": [
+						{
+							"key": "desde",
+							"value": "2026-02-01"
+						},
+						{
+							"key": "hasta",
+							"value": "2026-02-28"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

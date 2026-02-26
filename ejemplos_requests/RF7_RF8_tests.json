@@ -1,0 +1,455 @@
+{
+  "info": {
+    "name": "RF7 & RF8 - CONFIGURACIÓN DE MENÚ Y CREMAS",
+    "description": "Ejemplos de requests para configurar productos con imágenes y cremas/acompañamientos",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "RF7 - PRODUCTOS CON IMÁGENES",
+      "item": [
+        {
+          "name": "1. POST - Crear producto con imagen",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer TOKEN_AQUI",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "nombre",
+                  "value": "Salchipapas Premium",
+                  "type": "text"
+                },
+                {
+                  "key": "descripcion",
+                  "value": "Papa crispy con salchichón seleccionado",
+                  "type": "text"
+                },
+                {
+                  "key": "precio",
+                  "value": "12.50",
+                  "type": "text"
+                },
+                {
+                  "key": "categoria_id",
+                  "value": "1",
+                  "type": "text"
+                },
+                {
+                  "key": "activo",
+                  "value": "true",
+                  "type": "text"
+                },
+                {
+                  "key": "destacado",
+                  "value": "true",
+                  "type": "text"
+                },
+                {
+                  "key": "imagen",
+                  "type": "file",
+                  "src": "/ruta/a/imagen.jpg"
+                }
+              ]
+            },
+            "url": {
+              "raw": "http://localhost:8000/api/mis-productos",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8000",
+              "path": ["api", "mis-productos"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "2. PATCH - Actualizar producto con nueva imagen",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer TOKEN_AQUI",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "nombre",
+                  "value": "Salchipapas Premium Deluxe",
+                  "type": "text"
+                },
+                {
+                  "key": "precio",
+                  "value": "14.50",
+                  "type": "text"
+                },
+                {
+                  "key": "imagen",
+                  "type": "file",
+                  "src": "/ruta/a/imagen_nueva.jpg"
+                }
+              ]
+            },
+            "url": {
+              "raw": "http://localhost:8000/api/mis-productos/1",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8000",
+              "path": ["api", "mis-productos", "1"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "3. GET - Ver todos mis productos (con cremas)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer TOKEN_AQUI",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:8000/api/mis-productos",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8000",
+              "path": ["api", "mis-productos"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "RF8 - CREMAS/ACOMPAÑAMIENTOS",
+      "item": [
+        {
+          "name": "1. POST - Crear crema (Queso)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer TOKEN_AQUI",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Queso Cheddar\",\n  \"precio_adicional\": 2.50,\n  \"descripcion\": \"Queso cheddar derretido premium\",\n  \"activa\": true\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8000/api/mis-cremas",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8000",
+              "path": ["api", "mis-cremas"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "2. POST - Crear crema (Mayonesa)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer TOKEN_AQUI",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Mayonesa Casera\",\n  \"precio_adicional\": 0.50,\n  \"descripcion\": \"Mayonesa casera fresca\",\n  \"activa\": true\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8000/api/mis-cremas",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8000",
+              "path": ["api", "mis-cremas"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "3. POST - Crear crema (Huevo frito)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer TOKEN_AQUI",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Huevo Frito\",\n  \"precio_adicional\": 1.50,\n  \"descripcion\": \"Huevo frito recién hecho\",\n  \"activa\": true\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8000/api/mis-cremas",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8000",
+              "path": ["api", "mis-cremas"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "4. GET - Ver todas mis cremas",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer TOKEN_AQUI",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:8000/api/mis-cremas",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8000",
+              "path": ["api", "mis-cremas"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "5. PATCH - Actualizar crema (cambiar precio)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer TOKEN_AQUI",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"precio_adicional\": 3.00\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8000/api/mis-cremas/1",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8000",
+              "path": ["api", "mis-cremas", "1"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "6. PATCH - Desactivar crema",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer TOKEN_AQUI",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"activa\": false\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8000/api/mis-cremas/2",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8000",
+              "path": ["api", "mis-cremas", "2"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "RF8 - ASOCIAR CREMAS A PRODUCTOS",
+      "item": [
+        {
+          "name": "1. POST - Asociar crema a producto (Optional)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer TOKEN_AQUI",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"crema_id\": 1,\n  \"requerida\": false\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8000/api/mis-productos/1/cremas",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8000",
+              "path": ["api", "mis-productos", "1", "cremas"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "2. POST - Asociar crema a producto (REQUIRED)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer TOKEN_AQUI",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"crema_id\": 2,\n  \"requerida\": true\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8000/api/mis-productos/1/cremas",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8000",
+              "path": ["api", "mis-productos", "1", "cremas"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "3. GET - Ver cremas de un producto",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer TOKEN_AQUI",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:8000/api/mis-productos/1/cremas",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8000",
+              "path": ["api", "mis-productos", "1", "cremas"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "4. DELETE - Desasociar crema de producto",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer TOKEN_AQUI",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:8000/api/mis-productos/1/cremas/2",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8000",
+              "path": ["api", "mis-productos", "1", "cremas", "2"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "CLIENTE - VER MENÚ CON CREMAS",
+      "item": [
+        {
+          "name": "1. GET - Ver menú público (SIN AUTH, CON CREMAS)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8000/api/menu/1",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8000",
+              "path": ["api", "menu", "1"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "2. GET - Ver menú por slug",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8000/api/menu/salchipapas-don-juan-abc123",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8000",
+              "path": ["api", "menu", "salchipapas-don-juan-abc123"]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}

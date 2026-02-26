@@ -1,0 +1,272 @@
+[
+  {
+    "name": "RF6 - Test 1: GET /api/mis-puesto",
+    "request": {
+      "method": "GET",
+      "url": "http://localhost/api/mis-puesto",
+      "headers": {
+        "Authorization": "Bearer {TOKEN}",
+        "Content-Type": "application/json"
+      }
+    },
+    "response": {
+      "status": 200,
+      "body": {
+        "puesto": {
+          "id": 1,
+          "nombre": "Salchipapas Don Juan",
+          "slug": "salchipapas-don-juan",
+          "direccion": "Jr. Lima 123, Breña, Lima",
+          "telefono": "+51987654321",
+          "horario_apertura": "11:00",
+          "horario_cierre": "23:00",
+          "latitud": -12.0693,
+          "longitud": -77.0703,
+          "descripcion": "Las mejores salchipapas del barrio",
+          "qr_path": null,
+          "activo": true,
+          "creado_en": "2026-01-04T16:30:00Z"
+        }
+      }
+    }
+  },
+  {
+    "name": "RF6 - Test 2: POST /api/mis-puesto/generar-qr",
+    "request": {
+      "method": "POST",
+      "url": "http://localhost/api/mis-puesto/generar-qr",
+      "headers": {
+        "Authorization": "Bearer {TOKEN}",
+        "Content-Type": "application/json"
+      },
+      "body": {}
+    },
+    "response": {
+      "status": 200,
+      "body": {
+        "message": "QR generado exitosamente",
+        "qr_url": "http://localhost/storage/qr_codes/stall_1_1704415200.png",
+        "codigo_puesto": "STALL-1",
+        "menu_url": "http://localhost:3000/menu/salchipapas-don-juan",
+        "generado_en": "2026-01-04T16:30:00Z"
+      }
+    }
+  },
+  {
+    "name": "RF6 - Test 3: POST /api/mis-productos (Crear Producto 1)",
+    "request": {
+      "method": "POST",
+      "url": "http://localhost/api/mis-productos",
+      "headers": {
+        "Authorization": "Bearer {TOKEN}",
+        "Content-Type": "application/json"
+      },
+      "body": {
+        "nombre": "Salchipapas Clásica",
+        "descripcion": "Papa con salchichón y crema casera",
+        "precio": 8.50,
+        "categoria_id": 1,
+        "activo": true,
+        "destacado": false
+      }
+    },
+    "response": {
+      "status": 201,
+      "body": {
+        "message": "Producto creado exitosamente",
+        "producto": {
+          "id": 1,
+          "nombre": "Salchipapas Clásica",
+          "precio": 8.50,
+          "activo": true,
+          "destacado": false
+        }
+      }
+    }
+  },
+  {
+    "name": "RF6 - Test 4: POST /api/mis-productos (Crear Producto 2)",
+    "request": {
+      "method": "POST",
+      "url": "http://localhost/api/mis-productos",
+      "headers": {
+        "Authorization": "Bearer {TOKEN}",
+        "Content-Type": "application/json"
+      },
+      "body": {
+        "nombre": "Oferta del Día",
+        "descripcion": "Salchipapas a mitad de precio",
+        "precio": 5.00,
+        "categoria_id": 1,
+        "activo": true,
+        "destacado": true
+      }
+    },
+    "response": {
+      "status": 201,
+      "body": {
+        "message": "Producto creado exitosamente",
+        "producto": {
+          "id": 2,
+          "nombre": "Oferta del Día",
+          "precio": 5.00,
+          "activo": true,
+          "destacado": true
+        }
+      }
+    }
+  },
+  {
+    "name": "RF6 - Test 5: GET /api/mis-productos",
+    "request": {
+      "method": "GET",
+      "url": "http://localhost/api/mis-productos",
+      "headers": {
+        "Authorization": "Bearer {TOKEN}",
+        "Content-Type": "application/json"
+      }
+    },
+    "response": {
+      "status": 200,
+      "body": {
+        "puesto_id": 1,
+        "puesto_nombre": "Salchipapas Don Juan",
+        "total_productos": 2,
+        "productos": [
+          {
+            "id": 2,
+            "nombre": "Oferta del Día",
+            "descripcion": "Salchipapas a mitad de precio",
+            "precio": 5.00,
+            "categoria": "Platos",
+            "categoria_id": 1,
+            "activo": true,
+            "destacado": true,
+            "imagen": null,
+            "creado_en": "2026-01-04T16:30:00Z"
+          },
+          {
+            "id": 1,
+            "nombre": "Salchipapas Clásica",
+            "descripcion": "Papa con salchichón y crema casera",
+            "precio": 8.50,
+            "categoria": "Platos",
+            "categoria_id": 1,
+            "activo": true,
+            "destacado": false,
+            "imagen": null,
+            "creado_en": "2026-01-04T16:30:00Z"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "name": "RF6 - Test 6: PATCH /api/mis-productos/1 (Desactivar y destacar)",
+    "request": {
+      "method": "PATCH",
+      "url": "http://localhost/api/mis-productos/1",
+      "headers": {
+        "Authorization": "Bearer {TOKEN}",
+        "Content-Type": "application/json"
+      },
+      "body": {
+        "activo": false,
+        "destacado": true,
+        "precio": 7.50
+      }
+    },
+    "response": {
+      "status": 200,
+      "body": {
+        "message": "Producto actualizado exitosamente",
+        "producto": {
+          "id": 1,
+          "nombre": "Salchipapas Clásica",
+          "precio": 7.50,
+          "activo": false,
+          "destacado": true
+        }
+      }
+    }
+  },
+  {
+    "name": "RF6 - Test 7: GET /api/menu/salchipapas-don-juan (SIN autenticación)",
+    "request": {
+      "method": "GET",
+      "url": "http://localhost/api/menu/salchipapas-don-juan",
+      "headers": {
+        "Content-Type": "application/json"
+      }
+    },
+    "response": {
+      "status": 200,
+      "body": {
+        "puesto": {
+          "id": 1,
+          "nombre": "Salchipapas Don Juan",
+          "slug": "salchipapas-don-juan",
+          "direccion": "Jr. Lima 123, Breña, Lima",
+          "telefono": "+51987654321",
+          "horario_apertura": "11:00",
+          "horario_cierre": "23:00",
+          "activo": true,
+          "descripcion": "Las mejores salchipapas del barrio"
+        },
+        "productos": [
+          {
+            "id": 2,
+            "nombre": "Oferta del Día",
+            "precio": 5.00,
+            "descripcion": "Salchipapas a mitad de precio",
+            "categoria": "Platos",
+            "destacado": true,
+            "imagen": null
+          }
+        ],
+        "total_productos": 1,
+        "usuario_autenticado": false
+      }
+    }
+  },
+  {
+    "name": "RF6 - Test 8: GET /api/menu/salchipapas-don-juan (CON autenticación)",
+    "request": {
+      "method": "GET",
+      "url": "http://localhost/api/menu/salchipapas-don-juan",
+      "headers": {
+        "Authorization": "Bearer {TOKEN}",
+        "Content-Type": "application/json"
+      }
+    },
+    "response": {
+      "status": 200,
+      "body": {
+        "puesto": {
+          "id": 1,
+          "nombre": "Salchipapas Don Juan",
+          "slug": "salchipapas-don-juan",
+          "direccion": "Jr. Lima 123, Breña, Lima",
+          "telefono": "+51987654321",
+          "horario_apertura": "11:00",
+          "horario_cierre": "23:00",
+          "activo": true,
+          "descripcion": "Las mejores salchipapas del barrio"
+        },
+        "productos": [
+          {
+            "id": 2,
+            "nombre": "Oferta del Día",
+            "precio": 5.00,
+            "descripcion": "Salchipapas a mitad de precio",
+            "categoria": "Platos",
+            "destacado": true,
+            "imagen": null
+          }
+        ],
+        "total_productos": 1,
+        "usuario_autenticado": true
+      }
+    }
+  }
+]

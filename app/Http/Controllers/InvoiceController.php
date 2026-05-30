@@ -58,7 +58,7 @@ class InvoiceController extends Controller
     {
         $user = request()->user();
         // Admin can list all; vendors maybe list their invoices; clients list their invoices
-        if ($user->hasRole('admin')) {
+        if ($user->role === 'admin') {
             $invoices = Invoice::orderBy('created_at', 'desc')->limit(200)->get();
         } else {
             $invoices = Invoice::whereHas('order', function ($q) use ($user) {
@@ -75,7 +75,7 @@ class InvoiceController extends Controller
         $user = request()->user();
 
         // Allow owner or admin or seller
-        if ($invoice->order->user_id !== $user->id && !$user->hasRole('admin') && ($invoice->seller_id !== $user->id)) {
+        if ($invoice->order->user_id !== $user->id && $user->role !== 'admin' && ($invoice->seller_id !== $user->id)) {
             return response()->json(['success' => false, 'message' => 'No autorizado'], 403);
         }
 

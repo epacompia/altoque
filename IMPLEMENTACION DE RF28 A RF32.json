@@ -1,0 +1,171 @@
+{
+  "info": {
+    "name": "IMPLEMENTACION DE RF28 A RF32",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "Colección para probar los endpoints implementados de RF28 a RF32. Variables disponibles: {{token_cliente}}, {{token_vendedor}}, {{token_admin}}, {{lat}}, {{lng}}, {{stallId}}"
+  },
+  "item": [
+    {
+      "name": "RF28 - Test 1 - Buscar puestos cercanos por coordenadas (Haversine) - token: cliente",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{token_cliente}}", "type": "text" }
+        ],
+        "url": {
+          "raw": "http://127.0.0.1:8000/api/puestos/nearby?lat={{lat}}&lng={{lng}}&radius=1&page=1&per_page=10",
+          "protocol": "http",
+          "host": ["127.0.0.1"],
+          "port": "8000",
+          "path": ["api","puestos","nearby"],
+          "query": [
+            { "key": "lat", "value": "{{lat}}" },
+            { "key": "lng", "value": "{{lng}}" },
+            { "key": "radius", "value": "1" },
+            { "key": "page", "value": "1" },
+            { "key": "per_page", "value": "10" }
+          ]
+        },
+        "description": "Buscar puestos cercanos por coordenadas. Devuelve una lista paginada de puestos con distance_km y orders_count. Parámetros: lat, lng, radius (km), page, per_page."
+      }
+    },
+    {
+      "name": "RF28 - Test 2 - Listado de puestos con filtros y paginación - token: cliente",
+      "request": {
+        "method": "GET",
+        "header": [ { "key": "Authorization", "value": "Bearer {{token_cliente}}", "type": "text" } ],
+        "url": {
+          "raw": "http://127.0.0.1:8000/api/puestos?lat={{lat}}&lng={{lng}}&radius=5&page=1&per_page=20",
+          "protocol": "http",
+          "host": ["127.0.0.1"],
+          "port": "8000",
+          "path": ["api","puestos"],
+          "query": [
+            { "key": "lat", "value": "{{lat}}" },
+            { "key": "lng", "value": "{{lng}}" },
+            { "key": "radius", "value": "5" },
+            { "key": "open_now", "value": "" },
+            { "key": "sort", "value": "distance" },
+            { "key": "page", "value": "1" },
+            { "key": "per_page", "value": "20" }
+          ]
+        },
+        "description": "Listado público de puestos con filtros: lat, lng, radius, open_now, sort (distance|popularity), page y per_page. Devuelve metadatos de paginación y lista de puestos."
+      }
+    },
+    {
+      "name": "RF28 - Test 3 - Obtener marcadores para mapa (ligero) - token: cliente",
+      "request": {
+        "method": "GET",
+        "header": [ { "key": "Authorization", "value": "Bearer {{token_cliente}}", "type": "text" } ],
+        "url": {
+          "raw": "http://127.0.0.1:8000/api/puestos/map-markers?lat={{lat}}&lng={{lng}}&radius=3",
+          "protocol": "http",
+          "host": ["127.0.0.1"],
+          "port": "8000",
+          "path": ["api","puestos","map-markers"],
+          "query": [
+            { "key": "lat", "value": "{{lat}}" },
+            { "key": "lng", "value": "{{lng}}" },
+            { "key": "radius", "value": "3" }
+          ]
+        },
+        "description": "Obtener marcadores ligeros (id, lat, lng, name, icon, distance_km) para mostrar en el mapa. Parámetros: lat, lng, radius."
+      }
+    },
+    {
+      "name": "RF29 - Test 1 - Obtener puesto y menú activo (desde mapa) - token: cliente",
+      "request": {
+        "method": "GET",
+        "header": [ { "key": "Authorization", "value": "Bearer {{token_cliente}}", "type": "text" } ],
+        "url": {
+          "raw": "http://127.0.0.1:8000/api/puestos/{{stallId}}/map",
+          "protocol": "http",
+          "host": ["127.0.0.1"],
+          "port": "8000",
+          "path": ["api","puestos","{{stallId}}","map"]
+        },
+        "description": "Obtener los datos del puesto y su menú activo (menuItems). Reemplazar {{stallId}} por el ID del puesto."
+      }
+    },
+    {
+      "name": "RF29 - Test 2 - Alias: Obtener menú del puesto - token: cliente",
+      "request": {
+        "method": "GET",
+        "header": [ { "key": "Authorization", "value": "Bearer {{token_cliente}}", "type": "text" } ],
+        "url": {
+          "raw": "http://127.0.0.1:8000/api/puestos/{{stallId}}/menu",
+          "protocol": "http",
+          "host": ["127.0.0.1"],
+          "port": "8000",
+          "path": ["api","puestos","{{stallId}}","menu"]
+        },
+        "description": "Obtiene el menú activo del puesto (igual que /map). Reemplazar {{stallId}} por el ID del puesto."
+      }
+    },
+    {
+      "name": "RF30 - Test 1 - Consultar estado del puesto (abierto/pausa/próx apertura) - token: vendedor",
+      "request": {
+        "method": "GET",
+        "header": [ { "key": "Authorization", "value": "Bearer {{token_vendedor}}", "type": "text" } ],
+        "url": {
+          "raw": "http://127.0.0.1:8000/api/puestos/{{stallId}}/status",
+          "protocol": "http",
+          "host": ["127.0.0.1"],
+          "port": "8000",
+          "path": ["api","puestos","{{stallId}}","status"]
+        },
+        "description": "Consultar el estado del puesto: devuelve open_now (abierto ahora), in_pause (en pausa) y next_opening (próxima apertura). Reemplazar {{stallId}}."
+      }
+    },
+    {
+      "name": "RF32 - Test 1 - Estimar ruta y ETA (fallback local) - token: cliente",
+      "request": {
+        "method": "GET",
+        "header": [ { "key": "Authorization", "value": "Bearer {{token_cliente}}", "type": "text" } ],
+        "url": {
+          "raw": "http://127.0.0.1:8000/api/puestos/{{stallId}}/route?from_lat={{lat}}&from_lng={{lng}}&mode=driving",
+          "protocol": "http",
+          "host": ["127.0.0.1"],
+          "port": "8000",
+          "path": ["api","puestos","{{stallId}}","route"],
+          "query": [
+            { "key": "from_lat", "value": "{{lat}}" },
+            { "key": "from_lng", "value": "{{lng}}" },
+            { "key": "mode", "value": "driving" }
+          ]
+        },
+        "description": "Estimación local de distancia y tiempo: devuelve distance_km y estimated_time_min según el modo (driving, walking, bicycling). Parámetros: from_lat, from_lng, mode."
+      }
+    },
+    {
+      "name": "RF32 - Test 2 - Generar URL de direcciones (Google Maps) - token: cliente",
+      "request": {
+        "method": "GET",
+        "header": [ { "key": "Authorization", "value": "Bearer {{token_cliente}}", "type": "text" } ],
+        "url": {
+          "raw": "http://127.0.0.1:8000/api/puestos/{{stallId}}/directions?from_lat={{lat}}&from_lng={{lng}}&mode=driving",
+          "protocol": "http",
+          "host": ["127.0.0.1"],
+          "port": "8000",
+          "path": ["api","puestos","{{stallId}}","directions"],
+          "query": [
+            { "key": "from_lat", "value": "{{lat}}" },
+            { "key": "from_lng", "value": "{{lng}}" },
+            { "key": "mode", "value": "driving" }
+          ]
+        },
+        "description": "Genera una URL pública para abrir en Google Maps o en la app de mapas del dispositivo. Reemplazar {{stallId}} y parámetros from_lat/from_lng."
+      }
+    }
+  ],
+  "event": [],
+  "variable": [
+    { "key": "token_cliente", "value": "" },
+    { "key": "token_vendedor", "value": "" },
+    { "key": "token_admin", "value": "" },
+    { "key": "lat", "value": "-12.0464" },
+    { "key": "lng", "value": "-77.0428" },
+    { "key": "stallId", "value": "1" }
+  ]
+}

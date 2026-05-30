@@ -679,6 +679,88 @@ class MenuController extends Controller
         }
     }
 
+    // ========== GESTIÓN DE CATEGORÍAS ==========
+
+    // Obtener todas las categorías del vendedor
+    public function obtenerCategorias(Request $request)
+    {
+        try {
+            $usuario = Auth::user();
+            
+            $puesto = FoodStall::where('seller_id', $usuario->id)->first();
+            if (!$puesto) {
+                return response()->json(['error' => 'No tienes un puesto registrado'], 404);
+            }
+            
+            $categorias = \App\Models\Category::get()
+                                             ->map(function($categoria) {
+                                                 return [
+                                                     'id' => $categoria->id,
+                                                     'nombre' => $categoria->name
+                                                 ];
+                                             });
+            
+            return response()->json([
+                'total_categorias' => $categorias->count(),
+                'categorias' => $categorias
+            ], 200);
+            
+        } catch (\Exception $e) {
+            Log::error('Error al obtener categorías: ' . $e->getMessage());
+            return response()->json(['error' => 'Error al obtener categorías'], 500);
+        }
+    }
+
+    // Crear nueva categoría
+    public function crearCategoria(Request $request)
+    {
+        try {
+            $usuario = Auth::user();
+            
+            $validado = $request->validate([
+                'nombre' => 'required|string|max:255|unique:categories,name'
+            ], [
+                'nombre.required' => 'El nombre de la categoría es obligatorio',
+                'nombre.unique' => 'Esta categoría ya existe',
+                'nombre.max' => 'El nombre no puede exceder 255 caracteres'
+            ]);
+            
+            $puesto = FoodStall::where('seller_id', $usuario->id)->first();
+            if (!$puesto) {
+                return response()->json(['error' => 'No tienes un puesto registrado'], 404);
+            }
+            
+            $categoria = \App\Models\Category::create([
+                'name' => $validado['nombre']
+            ]);
+            
+            Log::info('Categoría creada', [
+                'categoria_id' => $categoria->id,
+                'usuario_id' => $usuario->id
+            ]);
+            
+            return response()->json([
+                'message' => 'Categoría creada exitosamente',
+                'categoria' => [
+                    'id' => $categoria->id,
+                    'nombre' => $categoria->name
+                ]
+            ], 201);
+            
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'error' => 'Errores de validación',
+                'errores' => $e->errors()
+            ], 422);
+        } catch (\Exception $e) {
+            Log::error('Error al crear categoría: ' . $e->getMessage());
+            return response()->json([
+                'error' => 'Error al crear categoría',
+                'detalles' => $e->getMessage()
+            ], 500);
+        }
+    }
+
     // MÉTODO ANTIGUO: Mantener para compatibilidad
     public function showMenu($stallId)
     {

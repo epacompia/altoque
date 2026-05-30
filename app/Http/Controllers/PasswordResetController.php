@@ -10,12 +10,31 @@ use Carbon\Carbon;
 
 class PasswordResetController extends Controller
 {
+    /**
+     * Normalizar número de teléfono: quitar prefijo +51 o 51 para buscar en BD
+     */
+    private function normalizarTelefono($phone)
+    {
+        $phone = trim($phone);
+        // Quitar +51 o 51 del inicio
+        if (str_starts_with($phone, '+51')) {
+            $phone = substr($phone, 3);
+        } elseif (str_starts_with($phone, '51') && strlen($phone) === 11) {
+            $phone = substr($phone, 2);
+        }
+        return $phone;
+    }
+
     // Enviar OTP
     public function sendOtp(Request $request)
     {
         $request->validate(['phone' => 'required|string']);
 
-        $user = User::where('phone', $request->phone)->first();
+        $phoneNormalizado = $this->normalizarTelefono($request->phone);
+
+        $user = User::where('phone', $phoneNormalizado)
+                     ->orWhere('phone', $request->phone)
+                     ->first();
         if (!$user) {
             return response()->json(['message' => 'Número de celular no está registrado'], 404);
         }
@@ -34,8 +53,10 @@ class PasswordResetController extends Controller
 
         // Enviar SMS usando Twilio
         try {
+            // Twilio necesita formato internacional (+51...)
+            $phoneParaSms = str_starts_with($user->phone, '+') ? $user->phone : '+51' . $user->phone;
             $smsService = new \App\Services\SmsService();
-            $smsService->sendSms($user->phone, "Tu código OTP es: $otp");
+            $smsService->sendSms($phoneParaSms, "Tu código OTP es: $otp");
             return response()->json(['message' => 'OTP enviado correctamente'], 200);
         } catch (\Exception $e) {
             // Devolver el error detallado en la respuesta
@@ -54,7 +75,12 @@ class PasswordResetController extends Controller
             'otp' => 'required|string',
         ]);
 
-        $reset = PasswordReset::where('phone', $request->phone)
+        $phoneNormalizado = $this->normalizarTelefono($request->phone);
+
+        $reset = PasswordReset::where(function($q) use ($phoneNormalizado, $request) {
+                    $q->where('phone', $phoneNormalizado)
+                      ->orWhere('phone', $request->phone);
+                })
                               ->where('otp', $request->otp)
                               ->where('expires_at', '>', Carbon::now())
                               ->first();
@@ -75,7 +101,12 @@ class PasswordResetController extends Controller
             'password' => 'required|string|min:6|confirmed',
         ]);
 
-        $reset = PasswordReset::where('phone', $request->phone)
+        $phoneNormalizado = $this->normalizarTelefono($request->phone);
+
+        $reset = PasswordReset::where(function($q) use ($phoneNormalizado, $request) {
+                    $q->where('phone', $phoneNormalizado)
+                      ->orWhere('phone', $request->phone);
+                })
                               ->where('otp', $request->otp)
                               ->where('expires_at', '>', Carbon::now())
                               ->first();
@@ -85,7 +116,9 @@ class PasswordResetController extends Controller
         }
 
         // Actualizar contraseña del usuario
-        $user = User::where('phone', $request->phone)->first();
+        $user = User::where('phone', $phoneNormalizado)
+                     ->orWhere('phone', $request->phone)
+                     ->first();
         $user->update(['password' => Hash::make($request->password)]);
 
         // Eliminar el registro OTP

@@ -4,8 +4,10 @@ namespace App\Jobs;
 
 use App\Models\Invoice;
 use App\Services\OseAdapterMock;
+use App\Services\InvoicePdfGenerator;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Storage;
@@ -16,7 +18,7 @@ use App\Mail\InvoiceFailedNotification;
 
 class GenerateElectronicInvoiceJob implements ShouldQueue
 {
-    use InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     public $invoiceId;
 
@@ -54,11 +56,15 @@ class GenerateElectronicInvoiceJob implements ShouldQueue
                 throw new \Exception('OSE error');
             }
 
-            // Save files
+            // Save XML
             $xmlPath = 'invoices/' . $invoice->id . '.xml';
-            $pdfPath = 'invoices/' . $invoice->id . '.pdf';
             Storage::put($xmlPath, $response['xml']);
-            Storage::put($pdfPath, $response['pdf']);
+
+            // Generate professional PDF using InvoicePdfGenerator
+            $pdfPath = 'invoices/' . $invoice->id . '.pdf';
+            $pdfGenerator = new InvoicePdfGenerator();
+            $pdfContent = $pdfGenerator->generate($invoice);
+            Storage::put($pdfPath, $pdfContent);
 
             $invoice->update([
                 'xml_path' => $xmlPath,

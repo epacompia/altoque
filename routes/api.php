@@ -6,17 +6,26 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\PasswordResetController;
 use App\Http\Controllers\StallController;
 use App\Http\Controllers\MenuController;
+use App\Http\Controllers\GeoController;
 use App\Http\Controllers\VendedorController;
 use App\Http\Controllers\StallScheduleController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\TestTokenController;
 use App\Http\Controllers\CommissionController;
+use App\Http\Controllers\Auth\ApiRegisterController;
+use App\Http\Controllers\Auth\ApiLoginController;
+use App\Http\Controllers\Auth\ApiLogoutController;
 
 /*
 |--------------------------------------------------------------------------
 | API Routes
 |--------------------------------------------------------------------------
 */
+
+// ========== AUTENTICACIÓN (API) ==========
+Route::post('/register', [ApiRegisterController::class, 'store']);
+Route::post('/login', [ApiLoginController::class, 'store']);
+Route::post('/logout', [ApiLogoutController::class, 'destroy'])->middleware('auth:sanctum');
 
 // ========== TESTING ENDPOINTS (solo para desarrollo) ==========
 Route::get('/test-token', [TestTokenController::class, 'generateTestToken']);
@@ -62,6 +71,10 @@ Route::middleware(['auth:sanctum', 'role:vendor'])->group(function () {
     Route::post('/mis-productos', [MenuController::class, 'crearProducto']);
     Route::patch('/mis-productos/{id}', [MenuController::class, 'actualizarProducto']);
     
+    // Categorías (RF6)
+    Route::get('/mis-categorias', [MenuController::class, 'obtenerCategorias']);
+    Route::post('/mis-categorias', [MenuController::class, 'crearCategoria']);
+    
     // Cremas/Acompañamientos (RF8)
     Route::get('/mis-cremas', [MenuController::class, 'obtenerCremas']);
     Route::post('/mis-cremas', [MenuController::class, 'crearCrema']);
@@ -76,6 +89,31 @@ Route::middleware(['auth:sanctum', 'role:vendor'])->group(function () {
 
 // CLIENTE: Ver menú público (sin autenticación)
 Route::get('/menu/{stallId}', [MenuController::class, 'verMenu']);
+
+// ========== RF28-RF32: GEO / MAPA ==========
+// Obtener puestos cercanos al punto (params: lat,lng,radius_km)
+Route::get('/puestos/nearby', [GeoController::class, 'nearby']);
+
+// Obtener URL de direcciones (cliente abre en Google Maps). Params: from_lat, from_lng
+Route::get('/puestos/{stallId}/directions', [GeoController::class, 'directions']);
+
+// Obtener datos del puesto + menú para mostrar desde mapa
+Route::get('/puestos/{stallId}/map', [GeoController::class, 'stallForMap']);
+
+// Estimar ruta y tiempo (sin API externa)
+Route::get('/puestos/{stallId}/route', [GeoController::class, 'route']);
+
+// Listado público de puestos con filtros (RF28-RF31)
+Route::get('/puestos', [GeoController::class, 'index']);
+
+// Marcadores ligeros para mapas (RF29)
+Route::get('/puestos/map-markers', [GeoController::class, 'mapMarkers']);
+
+// Estado y próximos horarios (RF31)
+Route::get('/puestos/{stallId}/status', [GeoController::class, 'status']);
+
+// Obtener menú (compatibilidad con RF30)
+Route::get('/puestos/{stallId}/menu', [GeoController::class, 'menu']);
 
 // ========== RF11, RF12, RF17: PEDIDOS Y PAGOS ==========
 Route::middleware(['auth:sanctum', 'role:client'])->group(function () {

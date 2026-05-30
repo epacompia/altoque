@@ -413,6 +413,18 @@ class StallScheduleController extends Controller
 
             Log::info("Tiempos de preparación actualizados para puesto {$puesto->id}");
 
+            $base = $puesto->base_preparation_time;
+            $perProduct = $puesto->time_per_product;
+            $perOrder = $puesto->time_per_active_order;
+            $delivery = $puesto->time_for_delivery;
+
+            // Datos reales del puesto
+            $totalProductos = \App\Models\MenuItem::where('stall_id', $puesto->id)->where('active', true)->count();
+            $ordenesActivas = \App\Models\Order::where('stall_id', $puesto->id)
+                ->whereIn('status', ['confirmed', 'preparing', 'ready'])
+                ->count();
+            $totalReal = $base + ($perProduct * $totalProductos) + ($perOrder * $ordenesActivas) + $delivery;
+
             return response()->json([
                 'message' => 'Tiempos de preparación actualizados',
                 'tiempos_configurados' => [
@@ -421,7 +433,12 @@ class StallScheduleController extends Controller
                     'time_per_active_order' => $puesto->time_per_active_order . ' min',
                     'time_for_delivery' => $puesto->time_for_delivery . ' min'
                 ],
-                'ejemplo_calculo' => 'Base(15) + productos(3*5) + ordenes_activas(2*5) + delivery(10) = 50 min'
+                'calculo_actual' => [
+                    'productos_activos' => $totalProductos,
+                    'ordenes_activas' => $ordenesActivas,
+                    'formula' => "Base({$base}) + productos({$perProduct}*{$totalProductos}) + ordenes_activas({$perOrder}*{$ordenesActivas}) + delivery({$delivery}) = {$totalReal} min",
+                    'tiempo_estimado_actual' => $totalReal . ' min'
+                ]
             ], 200);
 
         } catch (\Exception $e) {

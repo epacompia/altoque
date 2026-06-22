@@ -22,14 +22,28 @@ class ApiRegisterController extends Controller
                 'name' => ['required', 'string', 'max:255'],
                 'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
                 'password' => ['required', 'string', 'min:8', 'confirmed'],
+                'first_name' => ['nullable', 'string', 'max:255'],
+                'last_name' => ['nullable', 'string', 'max:255'],
+                'phone' => ['nullable', 'string', 'max:20'],
+                'dni' => ['nullable', 'string', 'max:8'],
+                'address' => ['nullable', 'string', 'max:255'],
+                'district' => ['nullable', 'string', 'max:255'],
+                'department' => ['nullable', 'string', 'max:255'],
             ]);
 
             $user = User::create([
                 'name' => $validated['name'],
                 'email' => $validated['email'],
                 'password' => Hash::make($validated['password']),
-                'role' => 'client', // Role por defecto
-            ]);
+                'role' => 'customer',
+                'first_name' => $validated['first_name'] ?? null,
+                'last_name' => $validated['last_name'] ?? null,
+                'phone' => $validated['phone'] ?? null,
+                'dni' => $validated['dni'] ?? null,
+                'address' => $validated['address'] ?? null,
+                'district' => $validated['district'] ?? null,
+                'department' => $validated['department'] ?? null,
+            ])->fresh();
 
             // Crear token API
             $token = $user->createToken('auth_token')->plainTextToken;
@@ -43,6 +57,13 @@ class ApiRegisterController extends Controller
                         'name' => $user->name,
                         'email' => $user->email,
                         'role' => $user->role,
+                        'first_name' => $user->first_name,
+                        'last_name' => $user->last_name,
+                        'phone' => $user->phone,
+                        'dni' => $user->dni,
+                        'address' => $user->address,
+                        'district' => $user->district,
+                        'department' => $user->department,
                     ],
                     'token' => $token,
                     'token_type' => 'Bearer',

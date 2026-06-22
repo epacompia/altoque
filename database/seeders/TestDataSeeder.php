@@ -20,7 +20,7 @@ class TestDataSeeder extends Seeder
             'email' => 'cliente@test.com',
             'phone' => '987654321',
             'password' => Hash::make('password123'),
-            'role' => 'client',
+            'role' => 'customer',
             'email_verified_at' => now(),
         ]);
 

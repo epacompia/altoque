@@ -652,9 +652,22 @@ class MenuController extends Controller
     public function obtenerCremasDeProducto(Request $request, $productoId)
     {
         try {
-            $producto = MenuItem::with(['toppings' => function($query) {
-                $query->where('active', true);
-            }])->findOrFail($productoId);
+            $usuario = Auth::user();
+            $puesto = FoodStall::where('seller_id', $usuario->id)->first();
+
+            if (!$puesto) {
+                return response()->json(['error' => 'No tienes un puesto registrado'], 404);
+            }
+
+            $producto = MenuItem::where('id', $productoId)
+                ->where('stall_id', $puesto->id)
+                ->with(['toppings' => function($query) {
+                    $query->where('active', true);
+                }])->first();
+
+            if (!$producto) {
+                return response()->json(['error' => 'No tiene acceso a ver el producto ya que no fue creado por usted'], 403);
+            }
             
             $cremas = $producto->toppings->map(function($topping) {
                 return [
@@ -675,7 +688,7 @@ class MenuController extends Controller
             
         } catch (\Exception $e) {
             Log::error('Error al obtener cremas del producto: ' . $e->getMessage());
-            return response()->json(['error' => 'Producto no encontrado'], 404);
+            return response()->json(['error' => $e->getMessage()], 500);
         }
     }
 

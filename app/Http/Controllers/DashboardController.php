@@ -17,7 +17,7 @@ class DashboardController extends Controller
 
         // Accesos rápidos por rol
         $quickAccess = [
-            'client' => [
+            'customer' => [
                 ['icon' => 'shopping_cart', 'label' => 'Nuevo Pedido', 'route' => '/pedidos'],
                 ['icon' => 'history', 'label' => 'Mis Pedidos', 'route' => '/mis-pedidos'],
                 ['icon' => 'star', 'label' => 'Promociones', 'route' => '/promociones'],
@@ -88,7 +88,7 @@ class DashboardController extends Controller
 
         return response()->json([
             'role' => $role,
-            'quick_access' => $quickAccess[$role] ?? $quickAccess['client'],
+            'quick_access' => $quickAccess[$role] ?? $quickAccess['customer'],
             'suggestions' => $suggestions,
         ]);
     }

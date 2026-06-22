@@ -1,6 +1,6 @@
-﻿{
+{
 	"info": {
-		"_postman_id": "ed67c029-fc8e-414d-b459-b0f3d6eca30c",
+		"_postman_id": "1929dfc1-a6dc-453f-bccb-e18982eade7e",
 		"name": "Altoque",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "31556369"
@@ -27,7 +27,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"name\": \"Juan Perez\",\n    \"email\": \"juan@example.com\",\n    \"password\": \"password123\",\n    \"password_confirmation\": \"password123\"\n}",
+							"raw": "{\n    \"name\": \"Juan Perez\",\n    \"email\": \"juan@example.com\",\n    \"password\": \"password123\",\n    \"password_confirmation\": \"password123\",\n    \"first_name\": \"Juan\",\n    \"last_name\": \"Perez\",\n    \"phone\": \"999888777\",\n    \"dni\": \"12345678\",\n    \"address\": \"Av. Principal 123\",\n    \"district\": \"Miraflores\",\n    \"department\": \"Lima\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -35,17 +35,19 @@
 							}
 						},
 						"url": {
-							"raw": "http://127.0.0.1:8000/register",
+							"raw": "http://127.0.0.1:8000/api/register",
 							"protocol": "http",
 							"host": [
-								"127.0.0.1"
+								"127",
+								"0",
+								"0",
+								"1"
 							],
 							"port": "8000",
 							"path": [
 								"register"
 							]
-						},
-						"description": "Registra un nuevo usuario y retorna un token de autenticación\n\nRespuesta exitosa (201):\n{\n  \"success\": true,\n  \"message\": \"Registro exitoso\",\n  \"data\": {\n    \"user\": {\n      \"id\": 1,\n      \"name\": \"Juan Perez\",\n      \"email\": \"juan@example.com\",\n      \"role\": \"client\"\n    },\n    \"token\": \"token_aqui\",\n    \"token_type\": \"Bearer\"\n  }\n}"
+						}
 					},
 					"response": []
 				},
@@ -75,17 +77,19 @@
 							}
 						},
 						"url": {
-							"raw": "http://127.0.0.1:8000/login",
+							"raw": "http://127.0.0.1:8000/api/login",
 							"protocol": "http",
 							"host": [
-								"127.0.0.1"
+								"127",
+								"0",
+								"0",
+								"1"
 							],
 							"port": "8000",
 							"path": [
 								"login"
 							]
-						},
-						"description": "Inicia sesión con email y contraseña, retorna un token de autenticación\n\nRespuesta exitosa (200):\n{\n  \"success\": true,\n  \"message\": \"Inicio de sesión exitoso\",\n  \"data\": {\n    \"user\": {\n      \"id\": 1,\n      \"name\": \"Juan Perez\",\n      \"email\": \"juan@example.com\",\n      \"role\": \"client\"\n    },\n    \"token\": \"token_aqui\",\n    \"token_type\": \"Bearer\"\n  }\n}\n\nRespuesta error (401):\n{\n  \"success\": false,\n  \"message\": \"Credenciales inválidas\",\n  \"errors\": {\n    \"email\": [\"Las credenciales no coinciden con nuestros registros.\"]\n  }\n}"
+						}
 					},
 					"response": []
 				},
@@ -97,7 +101,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "{{auth_token}}",
+									"value": "TOKEN_CLIENTE",
 									"type": "string"
 								}
 							]
@@ -105,28 +109,25 @@
 						"method": "POST",
 						"header": [
 							{
-								"key": "Content-Type",
-								"value": "application/json",
-								"type": "text"
-							},
-							{
 								"key": "Accept",
 								"value": "application/json",
 								"type": "text"
 							}
 						],
 						"url": {
-							"raw": "http://127.0.0.1:8000/logout",
+							"raw": "http://127.0.0.1:8000/api/logout",
 							"protocol": "http",
 							"host": [
-								"127.0.0.1"
+								"127",
+								"0",
+								"0",
+								"1"
 							],
 							"port": "8000",
 							"path": [
 								"logout"
 							]
-						},
-						"description": "Cierra la sesión revocando el token actual (requiere autenticación)\n\nHeaders requeridos:\n- Authorization: Bearer {token}\n\nRespuesta exitosa (200):\n{\n  \"success\": true,\n  \"message\": \"Sesión cerrada exitosamente\"\n}"
+						}
 					},
 					"response": []
 				},
@@ -142,17 +143,20 @@
 							}
 						],
 						"url": {
-							"raw": "http://127.0.0.1:8000/test-token",
+							"raw": "http://127.0.0.1:8000/api/test-token",
 							"protocol": "http",
 							"host": [
-								"127.0.0.1"
+								"127",
+								"0",
+								"0",
+								"1"
 							],
 							"port": "8000",
 							"path": [
+								"api",
 								"test-token"
 							]
-						},
-						"description": "Genera un token de prueba para desarrollo (solo desarrollo)"
+						}
 					},
 					"response": []
 				}
@@ -173,10 +177,15 @@
 							}
 						],
 						"url": {
-							"raw": "http://127.0.0.1:8000/auth/google",
+							"raw": "http://127.0.0.1:8000/api/auth/google",
+							"protocol": "http",
 							"host": [
-								"http://127.0.0.1:8000"
+								"127",
+								"0",
+								"0",
+								"1"
 							],
+							"port": "8000",
 							"path": [
 								"auth",
 								"google"
@@ -198,10 +207,15 @@
 							}
 						],
 						"url": {
-							"raw": "http://127.0.0.1:8000/auth/google/callback?code=CODIGO_DE_GOOGLE",
+							"raw": "http://127.0.0.1:8000/api/auth/google/callback?code=CODIGO_DE_GOOGLE",
+							"protocol": "http",
 							"host": [
-								"http://127.0.0.1:8000"
+								"127",
+								"0",
+								"0",
+								"1"
 							],
+							"port": "8000",
 							"path": [
 								"auth",
 								"google",
@@ -261,9 +275,14 @@
 						},
 						"url": {
 							"raw": "http://127.0.0.1:8000/api/user/update",
+							"protocol": "http",
 							"host": [
-								"http://127.0.0.1:8000"
+								"127",
+								"0",
+								"0",
+								"1"
 							],
+							"port": "8000",
 							"path": [
 								"api",
 								"user",
@@ -305,9 +324,14 @@
 						},
 						"url": {
 							"raw": "http://127.0.0.1:8000/api/send-otp",
+							"protocol": "http",
 							"host": [
-								"http://127.0.0.1:8000"
+								"127",
+								"0",
+								"0",
+								"1"
 							],
+							"port": "8000",
 							"path": [
 								"api",
 								"send-otp"
@@ -344,9 +368,14 @@
 						},
 						"url": {
 							"raw": "http://127.0.0.1:8000/api/verify-otp",
+							"protocol": "http",
 							"host": [
-								"http://127.0.0.1:8000"
+								"127",
+								"0",
+								"0",
+								"1"
 							],
+							"port": "8000",
 							"path": [
 								"api",
 								"verify-otp"
@@ -383,9 +412,14 @@
 						},
 						"url": {
 							"raw": "http://127.0.0.1:8000/api/reset-password",
+							"protocol": "http",
 							"host": [
-								"http://127.0.0.1:8000"
+								"127",
+								"0",
+								"0",
+								"1"
 							],
+							"port": "8000",
 							"path": [
 								"api",
 								"reset-password"
@@ -423,9 +457,14 @@
 						],
 						"url": {
 							"raw": "http://127.0.0.1:8000/api/dashboard",
+							"protocol": "http",
 							"host": [
-								"http://127.0.0.1:8000"
+								"127",
+								"0",
+								"0",
+								"1"
 							],
+							"port": "8000",
 							"path": [
 								"api",
 								"dashboard"
@@ -476,9 +515,14 @@
 						},
 						"url": {
 							"raw": "http://127.0.0.1:8000/api/convertirse-vendedor",
+							"protocol": "http",
 							"host": [
-								"http://127.0.0.1:8000"
+								"127",
+								"0",
+								"0",
+								"1"
 							],
+							"port": "8000",
 							"path": [
 								"api",
 								"convertirse-vendedor"
@@ -511,9 +555,14 @@
 						],
 						"url": {
 							"raw": "http://127.0.0.1:8000/api/mis-puesto",
+							"protocol": "http",
 							"host": [
-								"http://127.0.0.1:8000"
+								"127",
+								"0",
+								"0",
+								"1"
 							],
+							"port": "8000",
 							"path": [
 								"api",
 								"mis-puesto"
@@ -546,9 +595,14 @@
 						],
 						"url": {
 							"raw": "http://127.0.0.1:8000/api/mis-puesto/generar-qr",
+							"protocol": "http",
 							"host": [
-								"http://127.0.0.1:8000"
+								"127",
+								"0",
+								"0",
+								"1"
 							],
+							"port": "8000",
 							"path": [
 								"api",
 								"mis-puesto",
@@ -596,9 +650,14 @@
 						},
 						"url": {
 							"raw": "http://127.0.0.1:8000/api/mis-categorias",
+							"protocol": "http",
 							"host": [
-								"http://127.0.0.1:8000"
+								"127",
+								"0",
+								"0",
+								"1"
 							],
+							"port": "8000",
 							"path": [
 								"api",
 								"mis-categorias"
@@ -664,17 +723,22 @@
 								},
 								{
 									"key": "imagen",
-									"type": "file",
-									"src": "",
-									"description": "(Opcional) Imagen del producto - jpeg, png, jpg, gif - max 2MB"
+									"value": "",
+									"description": "(Opcional) Imagen del producto - jpeg, png, jpg, gif - max 2MB",
+									"type": "file"
 								}
 							]
 						},
 						"url": {
 							"raw": "http://127.0.0.1:8000/api/mis-productos",
+							"protocol": "http",
 							"host": [
-								"http://127.0.0.1:8000"
+								"127",
+								"0",
+								"0",
+								"1"
 							],
+							"port": "8000",
 							"path": [
 								"api",
 								"mis-productos"
@@ -740,17 +804,22 @@
 								},
 								{
 									"key": "imagen",
-									"type": "file",
-									"src": "",
-									"description": "(Opcional) Imagen del producto"
+									"value": "",
+									"description": "(Opcional) Imagen del producto",
+									"type": "file"
 								}
 							]
 						},
 						"url": {
 							"raw": "http://127.0.0.1:8000/api/mis-productos",
+							"protocol": "http",
 							"host": [
-								"http://127.0.0.1:8000"
+								"127",
+								"0",
+								"0",
+								"1"
 							],
+							"port": "8000",
 							"path": [
 								"api",
 								"mis-productos"
@@ -783,9 +852,14 @@
 						],
 						"url": {
 							"raw": "http://127.0.0.1:8000/api/mis-productos",
+							"protocol": "http",
 							"host": [
-								"http://127.0.0.1:8000"
+								"127",
+								"0",
+								"0",
+								"1"
 							],
+							"port": "8000",
 							"path": [
 								"api",
 								"mis-productos"
@@ -832,9 +906,14 @@
 						},
 						"url": {
 							"raw": "http://127.0.0.1:8000/api/mis-productos/1",
+							"protocol": "http",
 							"host": [
-								"http://127.0.0.1:8000"
+								"127",
+								"0",
+								"0",
+								"1"
 							],
+							"port": "8000",
 							"path": [
 								"api",
 								"mis-productos",
@@ -858,9 +937,14 @@
 						],
 						"url": {
 							"raw": "http://127.0.0.1:8000/api/menu/1",
+							"protocol": "http",
 							"host": [
-								"http://127.0.0.1:8000"
+								"127",
+								"0",
+								"0",
+								"1"
 							],
+							"port": "8000",
 							"path": [
 								"api",
 								"menu",
@@ -894,9 +978,14 @@
 						],
 						"url": {
 							"raw": "http://127.0.0.1:8000/api/menu/1",
+							"protocol": "http",
 							"host": [
-								"http://127.0.0.1:8000"
+								"127",
+								"0",
+								"0",
+								"1"
 							],
+							"port": "8000",
 							"path": [
 								"api",
 								"menu",
@@ -949,9 +1038,14 @@
 						},
 						"url": {
 							"raw": "http://127.0.0.1:8000/api/mis-cremas",
+							"protocol": "http",
 							"host": [
-								"http://127.0.0.1:8000"
+								"127",
+								"0",
+								"0",
+								"1"
 							],
+							"port": "8000",
 							"path": [
 								"api",
 								"mis-cremas"
@@ -984,9 +1078,14 @@
 						],
 						"url": {
 							"raw": "http://127.0.0.1:8000/api/mis-cremas",
+							"protocol": "http",
 							"host": [
-								"http://127.0.0.1:8000"
+								"127",
+								"0",
+								"0",
+								"1"
 							],
+							"port": "8000",
 							"path": [
 								"api",
 								"mis-cremas"
@@ -1033,9 +1132,14 @@
 						},
 						"url": {
 							"raw": "http://127.0.0.1:8000/api/mis-cremas/1",
+							"protocol": "http",
 							"host": [
-								"http://127.0.0.1:8000"
+								"127",
+								"0",
+								"0",
+								"1"
 							],
+							"port": "8000",
 							"path": [
 								"api",
 								"mis-cremas",
@@ -1069,9 +1173,14 @@
 						],
 						"url": {
 							"raw": "http://127.0.0.1:8000/api/mis-cremas/1",
+							"protocol": "http",
 							"host": [
-								"http://127.0.0.1:8000"
+								"127",
+								"0",
+								"0",
+								"1"
 							],
+							"port": "8000",
 							"path": [
 								"api",
 								"mis-cremas",
@@ -1119,9 +1228,14 @@
 						},
 						"url": {
 							"raw": "http://127.0.0.1:8000/api/mis-productos/1/cremas",
+							"protocol": "http",
 							"host": [
-								"http://127.0.0.1:8000"
+								"127",
+								"0",
+								"0",
+								"1"
 							],
+							"port": "8000",
 							"path": [
 								"api",
 								"mis-productos",
@@ -1156,9 +1270,14 @@
 						],
 						"url": {
 							"raw": "http://127.0.0.1:8000/api/mis-productos/1/cremas",
+							"protocol": "http",
 							"host": [
-								"http://127.0.0.1:8000"
+								"127",
+								"0",
+								"0",
+								"1"
 							],
+							"port": "8000",
 							"path": [
 								"api",
 								"mis-productos",
@@ -1193,9 +1312,14 @@
 						],
 						"url": {
 							"raw": "http://127.0.0.1:8000/api/mis-productos/1/cremas/1",
+							"protocol": "http",
 							"host": [
-								"http://127.0.0.1:8000"
+								"127",
+								"0",
+								"0",
+								"1"
 							],
+							"port": "8000",
 							"path": [
 								"api",
 								"mis-productos",
@@ -1236,9 +1360,14 @@
 						],
 						"url": {
 							"raw": "http://127.0.0.1:8000/api/mis-productos/offline",
+							"protocol": "http",
 							"host": [
-								"http://127.0.0.1:8000"
+								"127",
+								"0",
+								"0",
+								"1"
 							],
+							"port": "8000",
 							"path": [
 								"api",
 								"mis-productos",
@@ -1277,9 +1406,14 @@
 						],
 						"url": {
 							"raw": "http://127.0.0.1:8000/api/mis-puesto/horarios",
+							"protocol": "http",
 							"host": [
-								"http://127.0.0.1:8000"
+								"127",
+								"0",
+								"0",
+								"1"
 							],
+							"port": "8000",
 							"path": [
 								"api",
 								"mis-puesto",
@@ -1327,9 +1461,14 @@
 						},
 						"url": {
 							"raw": "http://127.0.0.1:8000/api/mis-puesto/horarios",
+							"protocol": "http",
 							"host": [
-								"http://127.0.0.1:8000"
+								"127",
+								"0",
+								"0",
+								"1"
 							],
+							"port": "8000",
 							"path": [
 								"api",
 								"mis-puesto",
@@ -1377,9 +1516,14 @@
 						},
 						"url": {
 							"raw": "http://127.0.0.1:8000/api/mis-puesto/pausas",
+							"protocol": "http",
 							"host": [
-								"http://127.0.0.1:8000"
+								"127",
+								"0",
+								"0",
+								"1"
 							],
+							"port": "8000",
 							"path": [
 								"api",
 								"mis-puesto",
@@ -1413,9 +1557,14 @@
 						],
 						"url": {
 							"raw": "http://127.0.0.1:8000/api/mis-puesto/pausas",
+							"protocol": "http",
 							"host": [
-								"http://127.0.0.1:8000"
+								"127",
+								"0",
+								"0",
+								"1"
 							],
+							"port": "8000",
 							"path": [
 								"api",
 								"mis-puesto",
@@ -1463,9 +1612,14 @@
 						},
 						"url": {
 							"raw": "http://127.0.0.1:8000/api/mis-puesto/pausas/1",
+							"protocol": "http",
 							"host": [
-								"http://127.0.0.1:8000"
+								"127",
+								"0",
+								"0",
+								"1"
 							],
+							"port": "8000",
 							"path": [
 								"api",
 								"mis-puesto",
@@ -1500,9 +1654,14 @@
 						],
 						"url": {
 							"raw": "http://127.0.0.1:8000/api/mis-puesto/pausas/1",
+							"protocol": "http",
 							"host": [
-								"http://127.0.0.1:8000"
+								"127",
+								"0",
+								"0",
+								"1"
 							],
+							"port": "8000",
 							"path": [
 								"api",
 								"mis-puesto",
@@ -1556,9 +1715,14 @@
 						},
 						"url": {
 							"raw": "http://127.0.0.1:8000/api/pedidos",
+							"protocol": "http",
 							"host": [
-								"http://127.0.0.1:8000"
+								"127",
+								"0",
+								"0",
+								"1"
 							],
+							"port": "8000",
 							"path": [
 								"api",
 								"pedidos"
@@ -1605,9 +1769,14 @@
 						},
 						"url": {
 							"raw": "http://127.0.0.1:8000/api/pedidos/1/pagar",
+							"protocol": "http",
 							"host": [
-								"http://127.0.0.1:8000"
+								"127",
+								"0",
+								"0",
+								"1"
 							],
+							"port": "8000",
 							"path": [
 								"api",
 								"pedidos",
@@ -1647,9 +1816,14 @@
 						],
 						"url": {
 							"raw": "http://127.0.0.1:8000/api/pedidos/1",
+							"protocol": "http",
 							"host": [
-								"http://127.0.0.1:8000"
+								"127",
+								"0",
+								"0",
+								"1"
 							],
+							"port": "8000",
 							"path": [
 								"api",
 								"pedidos",
@@ -1683,9 +1857,14 @@
 						],
 						"url": {
 							"raw": "http://127.0.0.1:8000/api/pedidos?page=1",
+							"protocol": "http",
 							"host": [
-								"http://127.0.0.1:8000"
+								"127",
+								"0",
+								"0",
+								"1"
 							],
+							"port": "8000",
 							"path": [
 								"api",
 								"pedidos"
@@ -1743,9 +1922,14 @@
 						},
 						"url": {
 							"raw": "http://127.0.0.1:8000/api/mis-puesto/tiempos-preparacion",
+							"protocol": "http",
 							"host": [
-								"http://127.0.0.1:8000"
+								"127",
+								"0",
+								"0",
+								"1"
 							],
+							"port": "8000",
 							"path": [
 								"api",
 								"mis-puesto",
@@ -1784,9 +1968,14 @@
 						],
 						"url": {
 							"raw": "http://127.0.0.1:8000/api/mis-pedidos",
+							"protocol": "http",
 							"host": [
-								"http://127.0.0.1:8000"
+								"127",
+								"0",
+								"0",
+								"1"
 							],
+							"port": "8000",
 							"path": [
 								"api",
 								"mis-pedidos"
@@ -1833,9 +2022,14 @@
 						},
 						"url": {
 							"raw": "http://127.0.0.1:8000/api/pedidos/1/cambiar-estado",
+							"protocol": "http",
 							"host": [
-								"http://127.0.0.1:8000"
+								"127",
+								"0",
+								"0",
+								"1"
 							],
+							"port": "8000",
 							"path": [
 								"api",
 								"pedidos",
@@ -1884,9 +2078,14 @@
 						},
 						"url": {
 							"raw": "http://127.0.0.1:8000/api/pedidos/1/cambiar-estado",
+							"protocol": "http",
 							"host": [
-								"http://127.0.0.1:8000"
+								"127",
+								"0",
+								"0",
+								"1"
 							],
+							"port": "8000",
 							"path": [
 								"api",
 								"pedidos",
@@ -1935,9 +2134,14 @@
 						},
 						"url": {
 							"raw": "http://127.0.0.1:8000/api/pedidos/1/cambiar-estado",
+							"protocol": "http",
 							"host": [
-								"http://127.0.0.1:8000"
+								"127",
+								"0",
+								"0",
+								"1"
 							],
+							"port": "8000",
 							"path": [
 								"api",
 								"pedidos",
@@ -1986,9 +2190,14 @@
 						},
 						"url": {
 							"raw": "http://127.0.0.1:8000/api/pedidos/1/cambiar-estado",
+							"protocol": "http",
 							"host": [
-								"http://127.0.0.1:8000"
+								"127",
+								"0",
+								"0",
+								"1"
 							],
+							"port": "8000",
 							"path": [
 								"api",
 								"pedidos",
@@ -2023,9 +2232,14 @@
 						],
 						"url": {
 							"raw": "http://127.0.0.1:8000/api/pedidos/1",
+							"protocol": "http",
 							"host": [
-								"http://127.0.0.1:8000"
+								"127",
+								"0",
+								"0",
+								"1"
 							],
+							"port": "8000",
 							"path": [
 								"api",
 								"pedidos",
@@ -2073,9 +2287,14 @@
 						},
 						"url": {
 							"raw": "http://127.0.0.1:8000/api/pedidos/1/cambiar-estado",
+							"protocol": "http",
 							"host": [
-								"http://127.0.0.1:8000"
+								"127",
+								"0",
+								"0",
+								"1"
 							],
+							"port": "8000",
 							"path": [
 								"api",
 								"pedidos",
@@ -2129,9 +2348,14 @@
 						},
 						"url": {
 							"raw": "http://127.0.0.1:8000/api/pedidos/1/cancelar",
+							"protocol": "http",
 							"host": [
-								"http://127.0.0.1:8000"
+								"127",
+								"0",
+								"0",
+								"1"
 							],
+							"port": "8000",
 							"path": [
 								"api",
 								"pedidos",
@@ -2185,9 +2409,14 @@
 						},
 						"url": {
 							"raw": "http://127.0.0.1:8000/api/pedidos/1/cambiar-direccion",
+							"protocol": "http",
 							"host": [
-								"http://127.0.0.1:8000"
+								"127",
+								"0",
+								"0",
+								"1"
 							],
+							"port": "8000",
 							"path": [
 								"api",
 								"pedidos",
@@ -2227,9 +2456,14 @@
 						],
 						"url": {
 							"raw": "http://127.0.0.1:8000/api/mis-pedidos",
+							"protocol": "http",
 							"host": [
-								"http://127.0.0.1:8000"
+								"127",
+								"0",
+								"0",
+								"1"
 							],
+							"port": "8000",
 							"path": [
 								"api",
 								"mis-pedidos"
@@ -2281,9 +2515,14 @@
 						},
 						"url": {
 							"raw": "http://127.0.0.1:8000/api/comisiones/calcular",
+							"protocol": "http",
 							"host": [
-								"http://127.0.0.1:8000"
+								"127",
+								"0",
+								"0",
+								"1"
 							],
+							"port": "8000",
 							"path": [
 								"api",
 								"comisiones",
@@ -2317,9 +2556,14 @@
 						],
 						"url": {
 							"raw": "http://127.0.0.1:8000/api/comisiones/pedido/1",
+							"protocol": "http",
 							"host": [
-								"http://127.0.0.1:8000"
+								"127",
+								"0",
+								"0",
+								"1"
 							],
+							"port": "8000",
 							"path": [
 								"api",
 								"comisiones",
@@ -2354,9 +2598,14 @@
 						],
 						"url": {
 							"raw": "http://127.0.0.1:8000/api/comisiones/reglas",
+							"protocol": "http",
 							"host": [
-								"http://127.0.0.1:8000"
+								"127",
+								"0",
+								"0",
+								"1"
 							],
+							"port": "8000",
 							"path": [
 								"api",
 								"comisiones",
@@ -2404,9 +2653,14 @@
 						},
 						"url": {
 							"raw": "http://127.0.0.1:8000/api/comisiones/reglas",
+							"protocol": "http",
 							"host": [
-								"http://127.0.0.1:8000"
+								"127",
+								"0",
+								"0",
+								"1"
 							],
+							"port": "8000",
 							"path": [
 								"api",
 								"comisiones",
@@ -2454,9 +2708,14 @@
 						},
 						"url": {
 							"raw": "http://127.0.0.1:8000/api/comisiones/reglas/1",
+							"protocol": "http",
 							"host": [
-								"http://127.0.0.1:8000"
+								"127",
+								"0",
+								"0",
+								"1"
 							],
+							"port": "8000",
 							"path": [
 								"api",
 								"comisiones",
@@ -2491,9 +2750,14 @@
 						],
 						"url": {
 							"raw": "http://127.0.0.1:8000/api/comisiones/reglas/1",
+							"protocol": "http",
 							"host": [
-								"http://127.0.0.1:8000"
+								"127",
+								"0",
+								"0",
+								"1"
 							],
+							"port": "8000",
 							"path": [
 								"api",
 								"comisiones",
@@ -2528,9 +2792,14 @@
 						],
 						"url": {
 							"raw": "http://127.0.0.1:8000/api/comisiones/reporte",
+							"protocol": "http",
 							"host": [
-								"http://127.0.0.1:8000"
+								"127",
+								"0",
+								"0",
+								"1"
 							],
+							"port": "8000",
 							"path": [
 								"api",
 								"comisiones",
@@ -2564,9 +2833,14 @@
 						],
 						"url": {
 							"raw": "http://127.0.0.1:8000/api/comisiones/auditoria",
+							"protocol": "http",
 							"host": [
-								"http://127.0.0.1:8000"
+								"127",
+								"0",
+								"0",
+								"1"
 							],
+							"port": "8000",
 							"path": [
 								"api",
 								"comisiones",
@@ -2610,9 +2884,14 @@
 						],
 						"url": {
 							"raw": "http://127.0.0.1:8000/api/comisiones/transferir",
+							"protocol": "http",
 							"host": [
-								"http://127.0.0.1:8000"
+								"127",
+								"0",
+								"0",
+								"1"
 							],
+							"port": "8000",
 							"path": [
 								"api",
 								"comisiones",
@@ -2651,9 +2930,14 @@
 						],
 						"url": {
 							"raw": "http://127.0.0.1:8000/api/comprobantes/generar/1",
+							"protocol": "http",
 							"host": [
-								"http://127.0.0.1:8000"
+								"127",
+								"0",
+								"0",
+								"1"
 							],
+							"port": "8000",
 							"path": [
 								"api",
 								"comprobantes",
@@ -2688,9 +2972,14 @@
 						],
 						"url": {
 							"raw": "http://127.0.0.1:8000/api/comprobantes/1/pdf",
+							"protocol": "http",
 							"host": [
-								"http://127.0.0.1:8000"
+								"127",
+								"0",
+								"0",
+								"1"
 							],
+							"port": "8000",
 							"path": [
 								"api",
 								"comprobantes",
@@ -2725,9 +3014,14 @@
 						],
 						"url": {
 							"raw": "http://127.0.0.1:8000/api/comprobantes/1/xml",
+							"protocol": "http",
 							"host": [
-								"http://127.0.0.1:8000"
+								"127",
+								"0",
+								"0",
+								"1"
 							],
+							"port": "8000",
 							"path": [
 								"api",
 								"comprobantes",
@@ -2762,9 +3056,14 @@
 						],
 						"url": {
 							"raw": "http://127.0.0.1:8000/api/comprobantes/1/reintentar",
+							"protocol": "http",
 							"host": [
-								"http://127.0.0.1:8000"
+								"127",
+								"0",
+								"0",
+								"1"
 							],
+							"port": "8000",
 							"path": [
 								"api",
 								"comprobantes",
@@ -2799,9 +3098,14 @@
 						],
 						"url": {
 							"raw": "http://127.0.0.1:8000/api/comprobantes",
+							"protocol": "http",
 							"host": [
-								"http://127.0.0.1:8000"
+								"127",
+								"0",
+								"0",
+								"1"
 							],
+							"port": "8000",
 							"path": [
 								"api",
 								"comprobantes"
@@ -2834,9 +3138,14 @@
 						],
 						"url": {
 							"raw": "http://127.0.0.1:8000/api/comprobantes/1",
+							"protocol": "http",
 							"host": [
-								"http://127.0.0.1:8000"
+								"127",
+								"0",
+								"0",
+								"1"
 							],
+							"port": "8000",
 							"path": [
 								"api",
 								"comprobantes",
@@ -2851,4 +3160,3 @@
 		}
 	]
 }
-

@@ -41,7 +41,7 @@ class GoogleController extends Controller
                     'last_name' => $lastName,
                     'email' => $googleUser->email,
                     'profile_picture' => $googleUser->avatar,
-                    'role' => 'client', // Cliente por defecto
+                    'role' => 'customer', // Cliente por defecto
                     'password' => null, // Debido a OAuth, la contraseña puede ser nula
                 ]);
             } else {

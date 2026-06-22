@@ -44,8 +44,21 @@ class UserController extends Controller
                 'error' => 'Error en validación',
                 'details' => $e->errors(),
             ], 422);
+        } catch (\Illuminate\Database\QueryException $e) {
+            $message = 'Error en la actualización';
+
+            if (str_contains($e->getMessage(), 'users_phone_unique')) {
+                $message = 'El número de teléfono ya está registrado por otro usuario';
+            } elseif (str_contains($e->getMessage(), 'users_dni_unique')) {
+                $message = 'El DNI ya está registrado por otro usuario';
+            } elseif (str_contains($e->getMessage(), 'users_email_unique')) {
+                $message = 'El correo electrónico ya está registrado por otro usuario';
+            }
+
+            return response()->json([
+                'error' => $message,
+            ], 409);
         } catch (\Exception $e) {
-            // Manejar otros errores y devolver respuesta con detalles
             return response()->json([
                 'error' => 'Error en la actualización',
                 'details' => $e->getMessage(),

@@ -22,7 +22,7 @@ class VendedorController extends Controller
             $usuario = Auth::user();
 
             // Validar que sea cliente
-            if ($usuario->role !== 'client') {
+            if ($usuario->role !== 'customer') {
                 return response()->json([
                     'error' => 'Solo los clientes pueden convertirse en vendedores',
                     'rol_actual' => $usuario->role

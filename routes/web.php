@@ -18,8 +18,8 @@ Route::get('/', function () {
     return ['Laravel' => app()->version()];
 });
 
-// Rutas para autenticación con Google
-Route::get('/auth/google', [GoogleController::class, 'redirectToGoogle'])->name('google.login');
-Route::get('/auth/google/callback', [GoogleController::class, 'handleGoogleCallback'])->name('google.callback');
+// Rutas para autenticación con Google (API)
+Route::get('/api/auth/google', [GoogleController::class, 'redirectToGoogle'])->name('google.login');
+Route::get('/api/auth/google/callback', [GoogleController::class, 'handleGoogleCallback'])->name('google.callback');
 
-require __DIR__.'/auth.php';
+// require __DIR__.'/auth.php';

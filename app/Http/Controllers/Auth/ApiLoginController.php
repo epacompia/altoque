@@ -41,12 +41,7 @@ class ApiLoginController extends Controller
                 'success' => true,
                 'message' => 'Inicio de sesión exitoso',
                 'data' => [
-                    'user' => [
-                        'id' => $user->id,
-                        'name' => $user->name,
-                        'email' => $user->email,
-                        'role' => $user->role,
-                    ],
+                    'user' => $user,
                     'token' => $token,
                     'token_type' => 'Bearer',
                 ]

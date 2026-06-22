@@ -43,7 +43,7 @@ Route::post('/reset-password', [PasswordResetController::class, 'resetPassword']
 Route::middleware('auth:sanctum')->put('/user/update', [UserController::class, 'update']);
 
 // Ruta para convertirse en vendedor (clientes solamente)
-Route::middleware(['auth:sanctum', 'role:client'])->post('/convertirse-vendedor', [VendedorController::class, 'convertirseAVendedor']);
+Route::middleware(['auth:sanctum', 'role:customer'])->post('/convertirse-vendedor', [VendedorController::class, 'convertirseAVendedor']);
 
 // ========== RF6: PUESTOS Y MENÚS ==========
 
@@ -116,7 +116,7 @@ Route::get('/puestos/{stallId}/status', [GeoController::class, 'status']);
 Route::get('/puestos/{stallId}/menu', [GeoController::class, 'menu']);
 
 // ========== RF11, RF12, RF17: PEDIDOS Y PAGOS ==========
-Route::middleware(['auth:sanctum', 'role:client'])->group(function () {
+Route::middleware(['auth:sanctum', 'role:customer'])->group(function () {
     // Crear pedido SIN pago (RF11 - Paso 1)
     Route::post('/pedidos', [OrderController::class, 'crearPedido']);
     

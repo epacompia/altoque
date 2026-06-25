@@ -51,17 +51,17 @@ class FoodStall extends Model
         $opening = $this->opening_time;
         $closing = $this->closing_time;
 
-        // Verificar si está dentro del horario
-        if ($now < $opening || $now >= $closing) {
+        if ($opening < $closing) {
+            $abierto = $now >= $opening && $now < $closing;
+        } else {
+            $abierto = $now >= $opening || $now < $closing;
+        }
+
+        if ($abierto && $this->pauses()->active()->exists()) {
             return false;
         }
 
-        // Verificar si hay pausas activas
-        if ($this->pauses()->active()->exists()) {
-            return false;
-        }
-
-        return true;
+        return $abierto;
     }
 
     /**

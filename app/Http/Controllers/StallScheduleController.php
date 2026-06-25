@@ -80,12 +80,29 @@ class StallScheduleController extends Controller
 
             $validado = $request->validate([
                 'horario_apertura' => 'required|date_format:H:i',
-                'horario_cierre' => 'required|date_format:H:i|after:horario_apertura',
+                'horario_cierre' => 'required|date_format:H:i',
                 'activo' => 'nullable|boolean'
             ], [
                 'horario_apertura.required' => 'El horario de apertura es obligatorio',
-                'horario_cierre.after' => 'El horario de cierre debe ser posterior al de apertura'
             ]);
+
+            $apertura = $validado['horario_apertura'];
+            $cierre = $validado['horario_cierre'];
+
+            if ($apertura === $cierre) {
+                return response()->json([
+                    'error' => 'El horario de apertura y cierre no pueden ser iguales'
+                ], 422);
+            }
+
+            if ($apertura < $cierre) {
+                $diferenciaMinutos = (strtotime($cierre) - strtotime($apertura)) / 60;
+                if ($diferenciaMinutos < 60) {
+                    return response()->json([
+                        'error' => 'El horario de atención debe ser al menos de 1 hora'
+                    ], 422);
+                }
+            }
 
             $puesto = FoodStall::where('seller_id', $usuario->id)->first();
 

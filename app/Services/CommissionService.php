@@ -166,34 +166,60 @@ class CommissionService
      */
     public function getCommissionReport($from, $to)
     {
-        $commissions = OrderCommission::whereBetween('calculated_at', [
-            Carbon::parse($from)->startOfDay(),
-            Carbon::parse($to)->endOfDay()
-        ])->get();
+        $fromDate = Carbon::parse($from)->startOfDay();
+        $toDate = Carbon::parse($to)->endOfDay();
+
+        // Totales agregados en SQL
+        $totals = OrderCommission::whereBetween('calculated_at', [$fromDate, $toDate])
+            ->selectRaw('COUNT(*) as total_pedidos')
+            ->selectRaw('COALESCE(SUM(order_total), 0) as monto_total_pedidos')
+            ->selectRaw('COALESCE(SUM(commission_amount), 0) as comisiones_totales')
+            ->selectRaw('COALESCE(SUM(net_amount), 0) as monto_neto_vendedores')
+            ->first();
+
+        // Conteo por estado en SQL
+        $porEstado = OrderCommission::whereBetween('calculated_at', [$fromDate, $toDate])
+            ->selectRaw("COALESCE(SUM(CASE WHEN status = 'pending' THEN 1 ELSE 0 END), 0) as pending")
+            ->selectRaw("COALESCE(SUM(CASE WHEN status = 'completed' THEN 1 ELSE 0 END), 0) as completed")
+            ->selectRaw("COALESCE(SUM(CASE WHEN status = 'refunded' THEN 1 ELSE 0 END), 0) as refunded")
+            ->first();
+
+        // Agrupado por regla en SQL
+        $porRegla = OrderCommission::whereBetween('calculated_at', [$fromDate, $toDate])
+            ->selectRaw('commission_rule_id')
+            ->selectRaw('COUNT(*) as cantidad')
+            ->selectRaw('COALESCE(SUM(commission_amount), 0) as comision_total')
+            ->selectRaw('COALESCE(SUM(net_amount), 0) as monto_neto')
+            ->groupBy('commission_rule_id')
+            ->get()
+            ->keyBy('commission_rule_id');
+
+        // Enriquecer con el porcentaje de cada regla
+        $reglas = CommissionRule::pluck('commission_percentage', 'id');
+        $porReglaFormato = $porRegla->map(function ($item) use ($reglas) {
+            return [
+                'cantidad' => (int) $item->cantidad,
+                'comision_total' => (float) $item->comision_total,
+                'porcentaje' => $reglas->get($item->commission_rule_id, 0),
+                'monto_neto' => (float) $item->monto_neto,
+            ];
+        });
 
         return [
             'periodo' => [
                 'desde' => $from,
                 'hasta' => $to
             ],
-            'total_pedidos' => $commissions->count(),
-            'monto_total_pedidos' => $commissions->sum('order_total'),
-            'comisiones_totales' => $commissions->sum('commission_amount'),
-            'monto_neto_vendedores' => $commissions->sum('net_amount'),
+            'total_pedidos' => (int) $totals->total_pedidos,
+            'monto_total_pedidos' => (float) $totals->monto_total_pedidos,
+            'comisiones_totales' => (float) $totals->comisiones_totales,
+            'monto_neto_vendedores' => (float) $totals->monto_neto_vendedores,
             'por_estado' => [
-                'pending' => $commissions->where('status', 'pending')->count(),
-                'completed' => $commissions->where('status', 'completed')->count(),
-                'refunded' => $commissions->where('status', 'refunded')->count(),
+                'pending' => (int) $porEstado->pending,
+                'completed' => (int) $porEstado->completed,
+                'refunded' => (int) $porEstado->refunded,
             ],
-            'por_regla' => $commissions->groupBy('commission_rule_id')->map(function ($group) {
-                return [
-                    'cantidad' => $group->count(),
-                    'comision_total' => $group->sum('commission_amount'),
-                    'porcentaje' => $group->first()->commission_percentage,
-                    'monto_neto' => $group->sum('net_amount')
-                ];
-            }),
-            'detalles' => $commissions
+            'por_regla' => $porReglaFormato,
         ];
     }
 

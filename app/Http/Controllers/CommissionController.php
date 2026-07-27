@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\ProcessCommissionTransfer;
 use App\Models\CommissionRule;
 use App\Models\OrderCommission;
 use App\Models\CommissionAuditLog;
@@ -130,12 +131,14 @@ class CommissionController extends Controller
                 $query->where('type', $request->input('tipo'));
             }
 
-            $reglas = $query->orderBy('type')->get();
+            $reglas = $query->orderBy('type')->paginate(50);
 
             return response()->json([
                 'exito' => true,
-                'total' => $reglas->count(),
-                'datos' => $reglas->map(fn ($r) => [
+                'total' => $reglas->total(),
+                'pagina' => $reglas->currentPage(),
+                'por_pagina' => $reglas->perPage(),
+                'datos' => collect($reglas->items())->map(fn ($r) => [
                     'id' => $r->id,
                     'nombre' => $r->name,
                     'tipo' => $r->type,
@@ -402,58 +405,34 @@ class CommissionController extends Controller
         $request->validate([
             'vendor_id' => 'nullable|integer|exists:users,id',
         ]);
-        $query = OrderCommission::where('status', 'pending');
+        $query = OrderCommission::select('order_commissions.*')
+            ->join('orders', 'order_commissions.order_id', '=', 'orders.id')
+            ->join('food_stalls', 'orders.stall_id', '=', 'food_stalls.id')
+            ->where('order_commissions.status', 'pending');
         if ($request->filled('vendor_id')) {
             $vendorId = $request->input('vendor_id');
-            $query->whereHas('order.foodStall', function ($q) use ($vendorId) {
-                $q->where('seller_id', $vendorId);
-            });
+            $query->where('food_stalls.seller_id', $vendorId);
         }
-        $comisiones = $query->get();
+        $total = (clone $query)->count();
 
-        if ($comisiones->isEmpty()) {
+        if ($total === 0) {
             return response()->json([
                 'exito' => false,
                 'mensaje' => 'No hay comisiones pendientes para transferir.'
             ], 200);
         }
 
-        $transferService = new TransferService();
-        $transferidas = [];
-
-        foreach ($comisiones as $comision) {
-            // Ejecutar transferencia síncrona (puede cambiarse a job)
-            $res = $transferService->transferToVendor($comision, $request->input('method', 'mock'));
-
-            if ($res['success']) {
-                $this->commissionService->markAsCompleted($comision, [
-                    'method' => $request->input('method', 'mock'),
-                    'transaction_id' => $res['transaction_id']
-                ]);
-
-                $transferidas[] = [
-                    'comision_id' => $comision->id,
-                    'pedido_id' => $comision->order_id,
-                    'monto_neto_vendedor' => $comision->net_amount,
-                    'transferida_en' => now(),
-                    'transaction_id' => $res['transaction_id']
-                ];
-            } else {
-                // registrar fallo y notificar
-                $transferidas[] = [
-                    'comision_id' => $comision->id,
-                    'pedido_id' => $comision->order_id,
-                    'monto_neto_vendedor' => $comision->net_amount,
-                    'error' => $res['message']
-                ];
+        $method = $request->input('method', 'mock');
+        $query->chunk(100, function ($comisiones) use ($method) {
+            foreach ($comisiones as $comision) {
+                ProcessCommissionTransfer::dispatch($comision, $method);
             }
-        }
+        });
 
         return response()->json([
             'exito' => true,
-            'mensaje' => 'Proceso de transferencia ejecutado (ver detalles).',
-            'total_procesadas' => count($transferidas),
-            'detalles' => $transferidas
+            'mensaje' => "Transferencia iniciada para {$total} comisiones. Los resultados se procesarán en segundo plano.",
+            'total_procesadas' => $total
         ], 200);
     }
 }

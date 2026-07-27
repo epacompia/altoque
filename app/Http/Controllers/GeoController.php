@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\FoodStall;
+use App\Models\Order;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Cache;
 
@@ -26,19 +27,26 @@ class GeoController extends Controller
         $radius = $request->input('radius', 1);
         $openNow = filter_var($request->input('open_now', false), FILTER_VALIDATE_BOOLEAN);
 
-        // Haversine formula (km)
-        $haversine = "(6371 * acos(cos(radians($lat)) * cos(radians(latitude)) * cos(radians(longitude) - radians($lng)) + sin(radians($lat)) * sin(radians(latitude))))";
-
         $page = max(1, (int) $request->input('page', 1));
         $perPage = min(50, max(5, (int) $request->input('per_page', 10)));
         $sort = $request->input('sort', 'distance'); // distance | popularity
+
+        // Bounding box: pre-filtro espacial para reducir filas antes del Haversine
+        $latDelta = $radius / 111.0;
+        $lngDelta = $radius / (111.0 * cos(deg2rad($lat)));
+
+        // Haversine formula (km) con bindings para cache de plan de ejecución
+        $haversine = "(6371 * acos(cos(radians(?)) * cos(radians(latitude)) * cos(radians(longitude) - radians(?)) + sin(radians(?)) * sin(radians(latitude))))";
 
         // agregar subconsulta para contar órdenes (popularidad)
         $ordersCountSub = DB::raw('(SELECT COUNT(*) FROM `orders` o WHERE o.stall_id = food_stalls.id AND o.status IN ("confirmed","preparing","ready","delivered")) as orders_count');
 
         $baseQuery = FoodStall::select('food_stalls.*', DB::raw("$haversine AS distance"), DB::raw($ordersCountSub))
             ->where('active', 1)
-            ->havingRaw("distance <= ?", [$radius]);
+            ->whereBetween('latitude', [$lat - $latDelta, $lat + $latDelta])
+            ->whereBetween('longitude', [$lng - $lngDelta, $lng + $lngDelta])
+            ->havingRaw("distance <= ?", [$radius])
+            ->addBinding([$lat, $lng, $lat], 'select');
 
         if ($sort === 'popularity') {
             $baseQuery->orderByDesc('orders_count')->orderBy('distance');
@@ -97,7 +105,10 @@ class GeoController extends Controller
         if (!$lat || !$lng) {
             $query = FoodStall::where('active', 1);
             if ($sort === 'popularity') {
-                $query->orderByDesc(DB::raw('(SELECT COUNT(*) FROM orders o WHERE o.stall_id = food_stalls.id)'));
+                $ordersCountSub = Order::select('stall_id', DB::raw('COUNT(*) as total_orders'))
+                    ->groupBy('stall_id');
+                $query->leftJoinSub($ordersCountSub, 'order_counts', 'food_stalls.id', '=', 'order_counts.stall_id')
+                    ->orderByDesc('order_counts.total_orders');
             } else {
                 $query->orderBy('name');
             }

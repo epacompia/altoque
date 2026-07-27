@@ -22,7 +22,7 @@ class MenuController extends Controller
     {
         try {
             $usuario = Auth::user();
-            $puesto = FoodStall::where('seller_id', $usuario->id)->first();
+            $puesto = $this->obtenerMiPuesto();
             if (!$puesto) {
                 return response()->json([
                     'error' => 'No tienes un puesto registrado'
@@ -75,7 +75,7 @@ class MenuController extends Controller
             $usuario = Auth::user();
             
             // Obtener puesto del vendedor
-            $puesto = FoodStall::where('seller_id', $usuario->id)->first();
+            $puesto = $this->obtenerMiPuesto();
             
             if (!$puesto) {
                 return response()->json([
@@ -155,7 +155,7 @@ class MenuController extends Controller
             ]);
             
             // Obtener puesto del vendedor
-            $puesto = FoodStall::where('seller_id', $usuario->id)->first();
+            $puesto = $this->obtenerMiPuesto();
             
             if (!$puesto) {
                 return response()->json([
@@ -402,12 +402,13 @@ class MenuController extends Controller
         try {
             $usuario = Auth::user();
             
-            $puesto = FoodStall::where('seller_id', $usuario->id)->first();
+            $puesto = $this->obtenerMiPuesto();
             if (!$puesto) {
                 return response()->json(['error' => 'No tienes un puesto registrado'], 404);
             }
             
             $cremas = Topping::where('stall_id', $puesto->id)
+                             ->withCount('menuItems')
                              ->orderBy('name')
                              ->get()
                              ->map(function($topping) {
@@ -417,7 +418,7 @@ class MenuController extends Controller
                                      'precio_adicional' => $topping->price,
                                      'descripcion' => $topping->description,
                                      'activa' => $topping->active,
-                                     'productos_asociados' => $topping->menuItems()->count()
+                                     'productos_asociados' => $topping->menu_items_count
                                  ];
                              });
             
@@ -446,7 +447,7 @@ class MenuController extends Controller
                 'activa' => 'nullable|boolean'
             ]);
             
-            $puesto = FoodStall::where('seller_id', $usuario->id)->first();
+            $puesto = $this->obtenerMiPuesto();
             if (!$puesto) {
                 return response()->json(['error' => 'No tienes un puesto registrado'], 404);
             }
@@ -501,7 +502,7 @@ class MenuController extends Controller
                 'activa' => 'nullable|boolean'
             ]);
             
-            $crema = Topping::findOrFail($id);
+            $crema = Topping::with('stall')->findOrFail($id);
             
             // Verificar permiso
             if ($crema->stall->seller_id !== $usuario->id) {
@@ -539,7 +540,7 @@ class MenuController extends Controller
         try {
             $usuario = Auth::user();
             
-            $crema = Topping::findOrFail($id);
+            $crema = Topping::with('stall')->findOrFail($id);
             
             // Verificar permiso
             if ($crema->stall->seller_id !== $usuario->id) {
@@ -680,7 +681,7 @@ class MenuController extends Controller
     {
         try {
             $usuario = Auth::user();
-            $puesto = FoodStall::where('seller_id', $usuario->id)->first();
+            $puesto = $this->obtenerMiPuesto();
 
             if (!$puesto) {
                 return response()->json(['error' => 'No tienes un puesto registrado'], 404);
@@ -727,18 +728,22 @@ class MenuController extends Controller
         try {
             $usuario = Auth::user();
             
-            $puesto = FoodStall::where('seller_id', $usuario->id)->first();
+            $puesto = $this->obtenerMiPuesto();
             if (!$puesto) {
                 return response()->json(['error' => 'No tienes un puesto registrado'], 404);
             }
             
-            $categorias = \App\Models\Category::get()
-                                             ->map(function($categoria) {
-                                                 return [
-                                                     'id' => $categoria->id,
-                                                     'nombre' => $categoria->name
-                                                 ];
-                                             });
+            $categorias = Cache::remember('categories_all', 86400, function () {
+                return \App\Models\Category::select('id', 'name')
+                    ->orderBy('name')
+                    ->get()
+                    ->map(function ($categoria) {
+                        return [
+                            'id' => $categoria->id,
+                            'nombre' => $categoria->name
+                        ];
+                    });
+            });
             
             return response()->json([
                 'total_categorias' => $categorias->count(),
@@ -765,7 +770,7 @@ class MenuController extends Controller
                 'nombre.max' => 'El nombre no puede exceder 255 caracteres'
             ]);
             
-            $puesto = FoodStall::where('seller_id', $usuario->id)->first();
+            $puesto = $this->obtenerMiPuesto();
             if (!$puesto) {
                 return response()->json(['error' => 'No tienes un puesto registrado'], 404);
             }
@@ -844,5 +849,13 @@ class MenuController extends Controller
         Cache::forget("menu_stall_{$menuItem->stall_id}");
 
         return response()->json(['message' => 'Plato actualizado', 'menu_item' => $menuItem]);
+    }
+
+    private function obtenerMiPuesto()
+    {
+        $usuario = Auth::user();
+        return Cache::remember("user.{$usuario->id}.stall", 3600, function () use ($usuario) {
+            return FoodStall::where('seller_id', $usuario->id)->first();
+        });
     }
 }

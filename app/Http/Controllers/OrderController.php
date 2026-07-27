@@ -11,6 +11,7 @@ use App\Jobs\ProcessPaymentJob;
 use App\Services\DeliveryService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
@@ -70,11 +71,17 @@ class OrderController extends Controller
             $subtotal = 0;
             $items = [];
 
-            // Procesar productos
-            foreach ($validado['productos'] as $prod) {
-                $producto = MenuItem::findOrFail($prod['producto_id']);
+            // Batch loading: cargar todos los productos y sus toppings en 2 queries
+            $productIds = array_column($validado['productos'], 'producto_id');
+            $productos = MenuItem::whereIn('id', $productIds)->with('toppings')->get()->keyBy('id');
+            $toppingsPorProducto = $productos->mapWithKeys(function ($p) {
+                return [$p->id => $p->toppings->keyBy('id')];
+            });
 
-                if (!$producto->active) {
+            foreach ($validado['productos'] as $prod) {
+                $producto = $productos->get($prod['producto_id']);
+
+                if (!$producto || !$producto->active) {
                     return response()->json([
                         'error' => "El producto '{$producto->name}' no está disponible"
                     ], 409);
@@ -85,12 +92,13 @@ class OrderController extends Controller
                 $item_subtotal = $cantidad * $precio_unitario;
                 $subtotal += $item_subtotal;
 
-                // Procesar cremas seleccionadas (si aplica)
+                // Procesar cremas seleccionadas desde colección en memoria
                 $toppingsCosto = 0;
                 $cremasSolicitadas = [];
+                $toppingsDelProducto = $toppingsPorProducto->get($producto->id, collect());
                 if (isset($prod['cremas']) && is_array($prod['cremas'])) {
                     foreach ($prod['cremas'] as $cremaId) {
-                        $crema = $producto->toppings()->find($cremaId);
+                        $crema = $toppingsDelProducto->get($cremaId);
                         if ($crema) {
                             $toppingsCosto += $crema->price * $cantidad;
                             $cremasSolicitadas[] = [
@@ -239,7 +247,7 @@ class OrderController extends Controller
                 'metodo_pago.required' => 'El método de pago es obligatorio'
             ]);
 
-            $orden = Order::findOrFail($id);
+            $orden = Order::with('stall')->findOrFail($id);
 
             // Verificar que el usuario es el dueño del pedido
             if ($orden->user_id !== $usuario->id) {
@@ -345,7 +353,7 @@ class OrderController extends Controller
         try {
             $usuario = Auth::user();
 
-            $orden = Order::with(['items.product', 'stall', 'payment'])
+            $orden = Order::with(['items.product', 'stall', 'payment', 'client'])
                          ->findOrFail($id);
 
             // Verificar que el usuario sea el cliente o el vendedor del puesto
@@ -453,7 +461,8 @@ class OrderController extends Controller
             $usuario = Auth::user();
 
             $pedidos = Order::where('user_id', $usuario->id)
-                           ->with(['stall', 'items.product'])
+                           ->with('stall')
+                           ->withCount('items')
                            ->orderBy('created_at', 'desc')
                            ->paginate(10);
 
@@ -463,7 +472,7 @@ class OrderController extends Controller
                     'puesto_nombre' => $orden->stall->name,
                     'estado' => $orden->status,
                     'total' => $orden->total,
-                    'cantidad_items' => $orden->items->count(),
+                    'cantidad_items' => $orden->items_count,
                     'created_at' => $orden->created_at
                 ];
             });
@@ -502,28 +511,33 @@ class OrderController extends Controller
 
             $pedidos = Order::where('stall_id', $puesto->id)
                            ->whereIn('status', ['confirmed', 'preparing', 'ready'])
-                           ->with(['client', 'items.product'])
+                           ->with('client')
+                           ->withCount('items')
                            ->orderBy('created_at', 'asc')
-                           ->get()
-                           ->map(function ($orden) {
-                               return [
-                                   'id' => $orden->id,
-                                   'cliente_nombre' => $orden->client->name,
-                                   'cliente_telefono' => $orden->client->phone,
-                                   'estado' => $orden->status,
-                                   'total' => $orden->total,
-                                   'items_count' => $orden->items->count(),
-                                   'direccion_entrega' => $orden->delivery_address,
-                                   'notas' => $orden->client_notes,
-                                   'created_at' => $orden->created_at,
-                                   'estimated_delivery_at' => $orden->estimated_delivery_at
-                               ];
-                           });
+                           ->paginate(20);
+
+            $pedidosFormato = collect($pedidos->items())->map(function ($orden) {
+                return [
+                    'id' => $orden->id,
+                    'cliente_nombre' => $orden->client->name,
+                    'cliente_telefono' => $orden->client->phone,
+                    'estado' => $orden->status,
+                    'total' => $orden->total,
+                    'items_count' => $orden->items_count,
+                    'direccion_entrega' => $orden->delivery_address,
+                    'notas' => $orden->client_notes,
+                    'created_at' => $orden->created_at,
+                    'estimated_delivery_at' => $orden->estimated_delivery_at
+                ];
+            });
 
             return response()->json([
                 'puesto_nombre' => $puesto->name,
-                'pedidos_activos' => $pedidos->count(),
-                'pedidos' => $pedidos
+                'pedidos_activos' => $pedidos->total(),
+                'pagina' => $pedidos->currentPage(),
+                'por_pagina' => $pedidos->perPage(),
+                'total' => $pedidos->total(),
+                'pedidos' => $pedidosFormato
             ], 200);
 
         } catch (\Exception $e) {
@@ -558,7 +572,7 @@ class OrderController extends Controller
                 'nuevo_estado.in' => 'Estado no válido. Estados permitidos: confirmed, preparing, ready, en_camino, delivered, cancelled'
             ]);
 
-            $orden = Order::findOrFail($orderId);
+            $orden = Order::with('stall')->findOrFail($orderId);
 
             // Verificar que el vendedor es dueño del puesto
             $puesto = $orden->stall;
@@ -655,10 +669,12 @@ class OrderController extends Controller
      */
     private function calcularTiempoEstimado($puesto, $totalUnidades, $tieneDelivery)
     {
-        // Obtener órdenes activas (confirmed, preparing, ready)
-        $ordenesActivas = Order::where('stall_id', $puesto->id)
-                              ->whereIn('status', ['confirmed', 'preparing', 'ready'])
-                              ->count();
+        // Obtener órdenes activas (confirmed, preparing, ready) con caché de 30s
+        $ordenesActivas = Cache::remember("stall.{$puesto->id}.active_orders_count", 30, function () use ($puesto) {
+            return Order::where('stall_id', $puesto->id)
+                ->whereIn('status', ['confirmed', 'preparing', 'ready'])
+                ->count();
+        });
 
         // Fórmula de cálculo:
         $tiempo_minutos = $puesto->base_preparation_time          // Base: 15 min

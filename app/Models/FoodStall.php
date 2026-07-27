@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Cache;
 
 class FoodStall extends Model
 {
@@ -34,41 +35,36 @@ class FoodStall extends Model
         return $this->belongsTo(User::class, 'seller_id');
     }
 
-    /**
-     * Relación: Un puesto tiene muchas pausas
-     */
     public function pauses()
     {
         return $this->hasMany(StallPause::class, 'stall_id');
     }
 
-    /**
-     * Verificar si el puesto está abierto ahora
-     */
     public function isOpenNow()
     {
-        $now = now()->format('H:i');
-        $opening = $this->opening_time;
-        $closing = $this->closing_time;
+        return Cache::remember("stall.{$this->id}.open_now", 300, function () {
+            $now = now()->format('H:i');
+            $opening = $this->opening_time;
+            $closing = $this->closing_time;
 
-        if ($opening < $closing) {
-            $abierto = $now >= $opening && $now < $closing;
-        } else {
-            $abierto = $now >= $opening || $now < $closing;
-        }
+            if ($opening < $closing) {
+                $abierto = $now >= $opening && $now < $closing;
+            } else {
+                $abierto = $now >= $opening || $now < $closing;
+            }
 
-        if ($abierto && $this->pauses()->active()->exists()) {
-            return false;
-        }
+            if ($abierto && $this->pauses()->active()->exists()) {
+                return false;
+            }
 
-        return $abierto;
+            return $abierto;
+        });
     }
 
-    /**
-     * Verificar si el puesto está en pausa ahora
-     */
     public function isInPauseNow()
     {
-        return $this->pauses()->active()->exists();
+        return Cache::remember("stall.{$this->id}.in_pause", 300, function () {
+            return $this->pauses()->active()->exists();
+        });
     }
 }

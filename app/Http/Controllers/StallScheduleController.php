@@ -114,6 +114,8 @@ class StallScheduleController extends Controller
             // FASE 2: Invalidar caché al actualizar
             Cache::forget("horarios_puesto_{$usuario->id}");
             Cache::forget("pausas_puesto_{$usuario->id}");
+            Cache::forget("stall.{$puesto->id}.open_now");
+            Cache::forget("stall.{$puesto->id}.in_pause");
 
             Log::info('Horarios actualizados', [
                 'stall_id' => $puesto->id,
@@ -181,6 +183,8 @@ class StallScheduleController extends Controller
 
             // FASE 2: Invalidar caché al crear pausa
             Cache::forget("pausas_puesto_{$usuario->id}");
+            Cache::forget("stall.{$puesto->id}.open_now");
+            Cache::forget("stall.{$puesto->id}.in_pause");
 
             Log::info('Pausa creada', [
                 'stall_id' => $puesto->id,
@@ -283,7 +287,7 @@ class StallScheduleController extends Controller
                 'activa' => 'nullable|boolean'
             ]);
 
-            $pausa = StallPause::findOrFail($id);
+            $pausa = StallPause::with('stall')->findOrFail($id);
 
             // Verificar que pertenezca al puesto del usuario
             if ($pausa->stall->seller_id !== $usuario->id) {
@@ -310,6 +314,8 @@ class StallScheduleController extends Controller
 
             // FASE 2: Invalidar caché al actualizar pausa
             Cache::forget("pausas_puesto_{$usuario->id}");
+            Cache::forget("stall.{$pausa->stall_id}.open_now");
+            Cache::forget("stall.{$pausa->stall_id}.in_pause");
 
             Log::info('Pausa actualizada', [
                 'pause_id' => $id,
@@ -346,7 +352,7 @@ class StallScheduleController extends Controller
         try {
             $usuario = Auth::user();
 
-            $pausa = StallPause::findOrFail($id);
+            $pausa = StallPause::with('stall')->findOrFail($id);
 
             // Verificar que pertenezca al puesto del usuario
             if ($pausa->stall->seller_id !== $usuario->id) {
@@ -359,6 +365,8 @@ class StallScheduleController extends Controller
 
             // FASE 2: Invalidar caché al eliminar pausa
             Cache::forget("pausas_puesto_{$usuario->id}");
+            Cache::forget("stall.{$pausa->stall_id}.open_now");
+            Cache::forget("stall.{$pausa->stall_id}.in_pause");
 
             Log::info('Pausa eliminada', [
                 'pause_id' => $id,

@@ -60,8 +60,10 @@ class DashboardController extends Controller
             ->limit(3)
             ->get();
 
+            $productIds = $orderItems->pluck('product_id');
+            $products = \App\Models\MenuItem::whereIn('id', $productIds)->get()->keyBy('id');
             foreach ($orderItems as $item) {
-                $product = \App\Models\MenuItem::find($item->product_id);
+                $product = $products->get($item->product_id);
                 if ($product) {
                     $suggestions[] = [
                         'title' => $product->name,

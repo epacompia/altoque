@@ -290,6 +290,33 @@ class MenuController extends Controller
         }
     }
 
+    // MÉTODO 5: Ver menú público desde web (para QR)
+    public function verMenuWeb($slug)
+    {
+        try {
+            $puesto = FoodStall::where('slug', $slug)
+                              ->where('active', true)
+                              ->firstOrFail();
+
+            $cacheKey = "menu_stall_{$puesto->id}";
+            $productos = Cache::remember($cacheKey, 60, function () use ($puesto) {
+                return MenuItem::where('stall_id', $puesto->id)
+                               ->where('active', true)
+                               ->with(['category', 'toppings' => function($query) {
+                                   $query->where('active', true);
+                               }])
+                               ->orderByRaw('featured DESC, name ASC')
+                               ->get();
+            });
+
+            return view('menu.public', compact('puesto', 'productos'));
+
+        } catch (\Exception $e) {
+            Log::error('Error al ver menú web: ' . $e->getMessage());
+            abort(404, 'Puesto no encontrado o no disponible');
+        }
+    }
+
     // MÉTODO 4: Ver menú público (cliente sin login) - ACTUALIZADO CON CREMAS
     public function verMenu(Request $request, $stallId)
     {

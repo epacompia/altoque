@@ -22,42 +22,35 @@ class StallScheduleController extends Controller
         try {
             $usuario = Auth::user();
             
-            // FASE 2: Usar caché con clave única por usuario
+            // Cache solo los datos fijos del horario, no el estado actual
             $cacheKey = "horarios_puesto_{$usuario->id}";
             
-            $horariosCache = Cache::remember($cacheKey, 3600, function () use ($usuario) {
-                $puesto = FoodStall::where('seller_id', $usuario->id)->first();
-                
-                if (!$puesto) {
-                    return null;
-                }
-
-                $estaAbierto = $puesto->isOpenNow();
-                $estaEnPausa = $puesto->isInPauseNow();
-
-                return [
-                    'puesto_id' => $puesto->id,
-                    'puesto_nombre' => $puesto->name,
-                    'horario' => [
-                        'apertura' => $puesto->opening_time,
-                        'cierre' => $puesto->closing_time,
-                        'activo' => $puesto->active
-                    ],
-                    'estado_actual' => [
-                        'abierto_ahora' => $estaAbierto,
-                        'en_pausa_ahora' => $estaEnPausa,
-                        'hora_actual' => now()->format('H:i:s')
-                    ]
-                ];
-            });
-
-            if (!$horariosCache) {
+            $puesto = FoodStall::where('seller_id', $usuario->id)->first();
+            
+            if (!$puesto) {
                 return response()->json([
                     'error' => 'No tienes un puesto registrado'
                 ], 404);
             }
 
-            return response()->json($horariosCache, 200);
+            $horario = Cache::remember($cacheKey, 3600, function () use ($puesto) {
+                return [
+                    'apertura' => $puesto->opening_time,
+                    'cierre' => $puesto->closing_time,
+                    'activo' => $puesto->active
+                ];
+            });
+
+            return response()->json([
+                'puesto_id' => $puesto->id,
+                'puesto_nombre' => $puesto->name,
+                'horario' => $horario,
+                'estado_actual' => [
+                    'abierto_ahora' => $puesto->isOpenNow(),
+                    'en_pausa_ahora' => $puesto->isInPauseNow(),
+                    'hora_actual' => now()->format('H:i:s')
+                ]
+            ], 200);
 
         } catch (\Exception $e) {
             Log::error('Error al obtener horarios: ' . $e->getMessage());
@@ -435,27 +428,21 @@ class StallScheduleController extends Controller
             $perOrder = $puesto->time_per_active_order;
             $delivery = $puesto->time_for_delivery;
 
-            // Datos reales del puesto
-            $totalProductos = \App\Models\MenuItem::where('stall_id', $puesto->id)->where('active', true)->count();
+            // Órdenes activas en cola
             $ordenesActivas = \App\Models\Order::where('stall_id', $puesto->id)
                 ->whereIn('status', ['confirmed', 'preparing', 'ready'])
                 ->count();
-            $totalReal = $base + ($perProduct * $totalProductos) + ($perOrder * $ordenesActivas) + $delivery;
+
+            $tiempoBase = $base + ($perOrder * $ordenesActivas) + $delivery;
 
             return response()->json([
                 'message' => 'Tiempos de preparación actualizados',
-                'tiempos_configurados' => [
-                    'base_preparation_time' => $puesto->base_preparation_time . ' min',
-                    'time_per_product' => $puesto->time_per_product . ' min',
-                    'time_per_active_order' => $puesto->time_per_active_order . ' min',
-                    'time_for_delivery' => $puesto->time_for_delivery . ' min'
-                ],
-                'calculo_actual' => [
-                    'productos_activos' => $totalProductos,
-                    'ordenes_activas' => $ordenesActivas,
-                    'formula' => "Base({$base}) + productos({$perProduct}*{$totalProductos}) + ordenes_activas({$perOrder}*{$ordenesActivas}) + delivery({$delivery}) = {$totalReal} min",
-                    'tiempo_estimado_actual' => $totalReal . ' min'
-                ]
+                'base_preparation_time' => $base . ' min',
+                'time_per_product' => $perProduct . ' min por unidad',
+                'time_per_active_order' => $perOrder . ' min',
+                'time_for_delivery' => $delivery . ' min',
+                'ordenes_activas_en_cola' => $ordenesActivas,
+                'tiempo_estimado_actual' => $tiempoBase . ' min (base + cola + delivery) + ' . $perProduct . ' min por cada unidad pedida'
             ], 200);
 
         } catch (\Exception $e) {

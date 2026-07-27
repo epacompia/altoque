@@ -9,7 +9,7 @@ use App\Http\Controllers\GoogleController;
 |--------------------------------------------------------------------------
 |
 | Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
+| routes are loaded by the RouteServiceProvider by default, which
 | contains the "web" middleware group. Now create something great!
 |
 */

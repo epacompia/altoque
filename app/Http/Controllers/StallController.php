@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\FoodStall;
+use App\Services\QrCodeService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
-use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -71,17 +71,14 @@ class StallController extends Controller
             }
             
             // Generar URL del menú con slug para mejor UX
-            $menuUrl = config('app.frontend_url', env('FRONTEND_URL', 'http://127.0.0.1:3000')) 
-                     . '/menu/' . $puesto->slug;
+            $menuUrl = config('app.url', env('APP_URL', 'http://127.0.0.1:8000')) 
+                     . '/api/menu/' . $puesto->slug;
             
-            // Generar QR usando SVG (no requiere imagick)
-            $filename = 'qr_codes/stall_' . $puesto->id . '_' . time() . '.svg';
-            $svg = QrCode::format('svg')
-                         ->size(400)
-                         ->margin(1)
-                         ->generate($menuUrl);
+            // Generar QR en PNG usando GD
+            $filename = 'qr_codes/stall_' . $puesto->id . '_' . time() . '.png';
+            $png = (new QrCodeService())->generatePng($menuUrl, 500, 4);
             
-            Storage::disk('public')->put($filename, $svg);
+            Storage::disk('public')->put($filename, $png);
             
             // Actualizar ruta en BD
             $puesto->qr_path = $filename;
@@ -131,11 +128,11 @@ class StallController extends Controller
     {
         $stall = FoodStall::findOrFail($stallId);
 
-        // URL de app/front (deep link) con stallId
-        $menuUrl = config('app.frontend_url', env('FRONTEND_URL', 'http://127.0.0.1:3000')) . '/stall/' . $stall->id;
+        // URL del menú API
+        $menuUrl = config('app.url', env('APP_URL', 'http://127.0.0.1:8000')) . '/api/menu/' . $stall->slug;
 
         $filename = 'qr_codes/stall_' . $stall->id . '.png';
-        $png = QrCode::format('png')->size(400)->generate($menuUrl);
+        $png = (new QrCodeService())->generatePng($menuUrl, 400, 4);
         Storage::disk('public')->put($filename, $png);
 
         $stall->qr_path = $filename;

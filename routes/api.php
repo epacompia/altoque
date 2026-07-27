@@ -123,9 +123,6 @@ Route::middleware(['auth:sanctum', 'role:customer'])->group(function () {
     // Pagar pedido (RF11 - Paso 2)
     Route::post('/pedidos/{id}/pagar', [OrderController::class, 'pagarPedido']);
     
-    // Ver detalle de pedido (RF12)
-    Route::get('/pedidos/{id}', [OrderController::class, 'obtenerPedido']);
-    
     // Listar mis pedidos (RF12)
     Route::get('/pedidos', [OrderController::class, 'listarPedidosCliente']);
     
@@ -143,6 +140,9 @@ Route::middleware(['auth:sanctum', 'role:vendor'])->group(function () {
     // ========== RF14: ESTADOS DEL PEDIDO ==========
     Route::patch('/pedidos/{id}/cambiar-estado', [OrderController::class, 'cambiarEstado']);
 });
+
+// Detalle de pedido: accesible para customer y vendor (el controlador valida permiso)
+Route::middleware('auth:sanctum')->get('/pedidos/{id}', [OrderController::class, 'obtenerPedido']);
 
 // ========== Rutas existentes ==========
 Route::middleware(['auth:sanctum', 'role:vendor'])->group(function () {

@@ -113,8 +113,10 @@ class OrderController extends Controller
                 ];
             }
 
-            // Calcular IGV (18%)
-            $igv = $subtotal * 0.18;
+            // Calcular IGV (18%) solo para factura
+            $igv = (!empty($validado['invoice_requested']) && ($validado['invoice_type'] ?? '') === 'factura')
+                   ? $subtotal * 0.18
+                   : 0;
 
             // Calcular delivery: si se indica with_delivery intentamos calcular distancia
             $delivery_cost = 0;
@@ -134,9 +136,10 @@ class OrderController extends Controller
             $total = $subtotal + $igv + $delivery_cost;
 
             // RF13: Calcular tiempo estimado de entrega
+            $totalUnidades = array_sum(array_column($items, 'cantidad'));
             $tiempoEstimado = $this->calcularTiempoEstimado(
                 $puesto,
-                count($items),
+                $totalUnidades,
                 ($validado['with_delivery'] ?? false)
             );
 
@@ -572,7 +575,7 @@ class OrderController extends Controller
             $transicionesValidas = [
                 'pending' => ['confirmed', 'cancelled'],
                 'confirmed' => ['preparing', 'cancelled'],
-                'preparing' => ['ready', 'cancelled'],
+                'preparing' => ['ready', 'confirmed', 'cancelled'],
                 'ready' => ['en_camino', 'delivered', 'cancelled'],
                 'en_camino' => ['delivered', 'cancelled'],
                 'delivered' => [],
@@ -648,9 +651,9 @@ class OrderController extends Controller
 
     /**
      * RF13 - Calcular tiempo estimado de entrega
-     * Basado en: carga del puesto, cantidad de productos, si hay delivery
+     * Basado en: carga del puesto, cantidad de unidades, si hay delivery
      */
-    private function calcularTiempoEstimado($puesto, $totalProductos, $tieneDelivery)
+    private function calcularTiempoEstimado($puesto, $totalUnidades, $tieneDelivery)
     {
         // Obtener órdenes activas (confirmed, preparing, ready)
         $ordenesActivas = Order::where('stall_id', $puesto->id)
@@ -659,7 +662,7 @@ class OrderController extends Controller
 
         // Fórmula de cálculo:
         $tiempo_minutos = $puesto->base_preparation_time          // Base: 15 min
-                        + ($totalProductos * $puesto->time_per_product)  // +5 min por producto
+                        + ($totalUnidades * $puesto->time_per_product)  // +5 min por unidad
                         + ($ordenesActivas * $puesto->time_per_active_order) // +5 min por pedido activo
                         + ($tieneDelivery ? $puesto->time_for_delivery : 0); // +10 min si delivery
 
@@ -670,7 +673,7 @@ class OrderController extends Controller
     /**
      * RF15 - Cancelar pedido
      * PATCH /api/pedidos/{id}/cancelar
-     * Solo cliente puede cancelar, solo en estados: pending, confirmed, preparing
+     * Solo cliente puede cancelar, solo en estado pending
      */
     public function cancelarPedido(Request $request, $orderId)
     {
@@ -686,56 +689,13 @@ class OrderController extends Controller
                 ], 403);
             }
 
-            // No se puede cancelar si ya está ready, en camino o entregado
-            if (in_array($orden->status, ['ready', 'en_camino', 'delivered', 'cancelled'])) {
+            // Solo se puede cancelar si está pendiente de pago
+            if ($orden->status !== 'pending') {
                 return response()->json([
                     'error' => "No se puede cancelar un pedido en estado '{$orden->status}'",
                     'estado_actual' => $orden->status,
-                    'razon' => 'El pedido está muy avanzado en la preparación'
+                    'razon' => 'Solo se pueden cancelar pedidos pendientes de pago'
                 ], 409);
-            }
-
-            // Realizar acciones de reembolso si existió pago
-            $estadoAnterior = $orden->status;
-
-            if ($orden->payment && $orden->payment->status === 'completed') {
-                // Reembolsar: marcar pago como refunded y revertir comisiones
-                $orden->payment->update(['status' => 'refunded']);
-
-                // Revertir comisión si existe
-                $orderCommission = \App\Models\OrderCommission::where('order_id', $orden->id)->first();
-                if ($orderCommission) {
-                    $this->commissionService = app(\App\Services\CommissionService::class);
-                    $this->commissionService->refundCommission($orderCommission);
-                }
-
-                // Registrar entry contable: debitar monto total (refund)
-                try {
-                    \App\Models\CompanyAccountEntry::create([
-                        'type' => 'debit',
-                        'amount' => $orden->total,
-                        'description' => 'Refund for cancelled order #' . $orden->id,
-                        'order_id' => $orden->id,
-                        'reference' => 'REFUND-ORDER-' . $orden->id
-                    ]);
-                } catch (\Exception $e) {
-                    Log::error('Error creating company account entry for refund: ' . $e->getMessage());
-                }
-            }
-
-            // Devolver costo de delivery si aplica y pedido no despachado
-            if ($orden->with_delivery && $orden->delivery_cost > 0) {
-                try {
-                    \App\Models\CompanyAccountEntry::create([
-                        'type' => 'debit',
-                        'amount' => $orden->delivery_cost,
-                        'description' => 'Refund delivery cost for order #' . $orden->id,
-                        'order_id' => $orden->id,
-                        'reference' => 'REFUND-DELIVERY-' . $orden->id
-                    ]);
-                } catch (\Exception $e) {
-                    Log::error('Error creating delivery refund entry: ' . $e->getMessage());
-                }
             }
 
             // Cambiar estado a cancelled

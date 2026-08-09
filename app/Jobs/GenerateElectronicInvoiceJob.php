@@ -41,6 +41,7 @@ class GenerateElectronicInvoiceJob implements ShouldQueue
 
             $payload = [
                 'order_id' => $invoice->order_id,
+                'invoice_id' => $invoice->id,
                 'type' => $invoice->type,
                 'subtotal' => $invoice->subtotal,
                 'igv' => $invoice->igv,
@@ -79,7 +80,7 @@ class GenerateElectronicInvoiceJob implements ShouldQueue
 
             // Send to customer if email available
             $order = $invoice->order;
-            $customerEmail = $order->user->email ?? null;
+            $customerEmail = $order->client->email ?? null;
             if ($customerEmail) {
                 Mail::to($customerEmail)->queue(new InvoiceGenerated($invoice->fresh()));
             }

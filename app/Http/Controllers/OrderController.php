@@ -7,6 +7,7 @@ use App\Models\OrderItem;
 use App\Models\Payment;
 use App\Models\MenuItem;
 use App\Models\FoodStall;
+use App\Models\Notification;
 use App\Jobs\ProcessPaymentJob;
 use App\Services\DeliveryService;
 use Illuminate\Http\Request;
@@ -616,6 +617,8 @@ class OrderController extends Controller
 
             $orden->save();
 
+            $this->crearNotificacionPedido($orden, $nuevoEstado);
+
             Log::info("Pedido #{$orderId} cambió de '{$estadoActual}' a '{$nuevoEstado}' por vendedor {$usuario->id}");
 
             return response()->json([
@@ -714,9 +717,11 @@ class OrderController extends Controller
                 ], 409);
             }
 
-            // Cambiar estado a cancelled
+            $estadoAnterior = $orden->status;
             $orden->status = 'cancelled';
             $orden->save();
+
+            $this->crearNotificacionPedido($orden, 'cancelled', $orden->stall->seller_id);
 
             Log::info("Pedido #{$orderId} cancelado por cliente {$usuario->id}", [
                 'estado_anterior' => $estadoAnterior,
@@ -729,7 +734,6 @@ class OrderController extends Controller
                 'estado_anterior' => $estadoAnterior,
                 'estado_nuevo' => 'cancelled',
                 'total_cancelado' => $orden->total,
-                'nota' => 'El dinero será reembolsado a tu método de pago original'
             ], 200);
 
         } catch (\Exception $e) {
@@ -803,6 +807,50 @@ class OrderController extends Controller
                 'error' => 'Error al cambiar dirección del pedido'
             ], 500);
         }
+    }
+
+    private function crearNotificacionPedido($orden, $tipo, $usuarioId = null)
+    {
+        $mensajes = [
+            'confirmed' => [
+                'title' => 'Nuevo pedido confirmado',
+                'body' => "Pedido #{$orden->id} de {$orden->client->name} por S/ {$orden->total}",
+            ],
+            'preparing' => [
+                'title' => 'Pedido en preparación',
+                'body' => "Tu pedido #{$orden->id} en {$orden->stall->name} ya se está preparando",
+            ],
+            'ready' => [
+                'title' => 'Pedido listo',
+                'body' => "Tu pedido #{$orden->id} de {$orden->stall->name} está listo",
+            ],
+            'en_camino' => [
+                'title' => 'Pedido en camino',
+                'body' => "Tu pedido #{$orden->id} de {$orden->stall->name} va en camino",
+            ],
+            'delivered' => [
+                'title' => 'Pedido entregado',
+                'body' => "Pedido #{$orden->id} de {$orden->stall->name} entregado — ¡Buen provecho!",
+            ],
+            'cancelled' => [
+                'title' => 'Pedido cancelado',
+                'body' => "Pedido #{$orden->id} de {$orden->stall->name} fue cancelado",
+            ],
+        ];
+
+        $info = $mensajes[$tipo] ?? ['title' => 'Pedido actualizado', 'body' => "Pedido #{$orden->id}"];
+        $destinatarioId = $usuarioId ?? $orden->user_id;
+
+        Notification::create([
+            'user_id' => $destinatarioId,
+            'type' => "order_{$tipo}",
+            'title' => $info['title'],
+            'body' => $info['body'],
+            'notifiable_id' => $orden->id,
+            'notifiable_type' => Order::class,
+        ]);
+
+        Cache::forget("user.{$destinatarioId}.notificaciones_no_leidas");
     }
 }
 

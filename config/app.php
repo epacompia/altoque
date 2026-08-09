@@ -187,4 +187,20 @@ return [
         // 'Example' => App\Facades\Example::class,
     ])->toArray(),
 
+    'user_config_defaults' => [
+        'tema' => 'sistema',
+        'idioma' => 'es',
+        'notificaciones' => [
+            'push' => true,
+            'promociones' => false,
+            'sonido' => true,
+            'vibracion' => false,
+        ],
+        'unidades' => 'metric',
+        'moneda' => 'soles',
+        'seguridad' => [
+            'biometria' => false,
+        ],
+    ],
+
 ];

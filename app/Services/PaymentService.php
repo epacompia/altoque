@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Services\CommissionService;
 use App\Models\CompanyAccountEntry;
+use App\Models\Notification;
 use App\Services\InvoiceService;
 
 class PaymentService
@@ -55,6 +56,18 @@ class PaymentService
                 'payment_id' => $payment->id,
                 'confirmed_at' => now(),
             ]);
+
+            // Notificar al vendedor sobre nuevo pedido
+            $order->load('client', 'stall');
+            Notification::create([
+                'user_id' => $order->stall->seller_id,
+                'type' => 'new_order',
+                'title' => 'Nuevo pedido recibido',
+                'body' => "Pedido #{$order->id} de {$order->client->name} por S/ {$order->total}",
+                'notifiable_id' => $order->id,
+                'notifiable_type' => Order::class,
+            ]);
+            \Illuminate\Support\Facades\Cache::forget("user.{$order->stall->seller_id}.notificaciones_no_leidas");
 
             // Registrar entrada en cuenta institucional (company holds the payment temporarily)
             CompanyAccountEntry::create([

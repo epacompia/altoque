@@ -27,21 +27,48 @@ class Order extends Model
         'delivery_address',
         'client_notes',
         'estimated_delivery_at',
-        'delivered_at'
+        'delivered_at',
+        'confirmed_at',
+        'preparing_at',
+        'ready_at',
+        'en_camino_at',
+        'invoice_requested',
+        'invoice_type',
+        'customer_document_type',
+        'customer_document_number',
+        'customer_name'
     ];
 
     protected $casts = [
         'estimated_delivery_at' => 'datetime',
         'delivered_at' => 'datetime',
+        'confirmed_at' => 'datetime',
+        'preparing_at' => 'datetime',
+        'ready_at' => 'datetime',
+        'en_camino_at' => 'datetime',
         'delivery_latitude' => 'decimal:8',
         'delivery_longitude' => 'decimal:8',
         'delivery_distance_km' => 'decimal:2',
+        'with_delivery' => 'boolean',
+        'invoice_requested' => 'boolean',
+        'subtotal' => 'decimal:2',
+        'igv' => 'decimal:2',
+        'delivery_cost' => 'decimal:2',
+        'total' => 'decimal:2',
     ];
 
     /**
      * Relación: Una orden pertenece a un cliente
      */
     public function client()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+    /**
+     * Alias de client() para mantener compatibilidad con servicios existentes
+     */
+    public function user()
     {
         return $this->belongsTo(User::class, 'user_id');
     }

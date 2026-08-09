@@ -46,7 +46,9 @@ class OseAdapterMock
         $horaEmision = now()->format('H:i:s');
         $tipoDoc = ($payload['type'] ?? 'boleta') === 'factura' ? '01' : '03';
         $serie = $tipoDoc === '01' ? 'F001' : 'B001';
-        $numero = str_pad($payload['order_id'], 8, '0', STR_PAD_LEFT);
+        // Número correlativo: usa el id del comprobante (único por documento),
+        // igual al que muestra el PDF. Fallback a order_id por compatibilidad.
+        $numero = str_pad($payload['invoice_id'] ?? $payload['order_id'], 8, '0', STR_PAD_LEFT);
         $serieNumero = $serie . '-' . $numero;
 
         $subtotal = number_format($payload['subtotal'] ?? 0, 2, '.', '');
@@ -218,12 +220,11 @@ class OseAdapterMock
                 $lineNumber++;
             }
 
-            // Agregar delivery si aplica
+            // Agregar delivery si aplica (sin IGV adicional: el IGV del documento
+            // ya cubre los items; así los totales del XML coinciden con el invoice)
             if ($order->delivery_cost > 0) {
                 $deliveryCost = number_format($order->delivery_cost, 2, '.', '');
-                $deliveryIgv = number_format($order->delivery_cost * 0.18, 2, '.', '');
-                $deliveryTotal = number_format($order->delivery_cost + ($order->delivery_cost * 0.18), 2, '.', '');
-                $xml .= $this->buildInvoiceLine($lineNumber, 1, 'ZZ', 'Servicio de Delivery', $deliveryCost, $deliveryCost, $deliveryIgv, $deliveryTotal);
+                $xml .= $this->buildInvoiceLine($lineNumber, 1, 'ZZ', 'Servicio de Delivery', $deliveryCost, $deliveryCost, '0.00', $deliveryCost);
             }
         } else {
             // Fallback: item único con el total

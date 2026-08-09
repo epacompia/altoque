@@ -217,7 +217,7 @@ class InvoicePdfGenerator
             $this->pdf->Cell(15, 6, 'UND', 'LR', 0, 'C', true);
             $this->pdf->Cell(80, 6, $this->utf8($productName . $toppingsText), 'LR', 0, 'L', true);
             $this->pdf->Cell(30, 6, 'S/ ' . $precioUnit, 'LR', 0, 'R', true);
-            $this->pdf->Cell(15, 6, '18%', 'LR', 0, 'C', true);
+            $this->pdf->Cell(15, 6, $this->invoice->type === 'factura' ? '18%' : '0%', 'LR', 0, 'C', true);
             $this->pdf->Cell(35, 6, 'S/ ' . $subtotalItem, 'LR', 0, 'R', true);
 
             $y += 6;
@@ -232,7 +232,7 @@ class InvoicePdfGenerator
             $this->pdf->Cell(15, 6, 'SRV', 'LR', 0, 'C', true);
             $this->pdf->Cell(80, 6, 'Servicio de Delivery', 'LR', 0, 'L', true);
             $this->pdf->Cell(30, 6, 'S/ ' . number_format($this->order->delivery_cost, 2), 'LR', 0, 'R', true);
-            $this->pdf->Cell(15, 6, '18%', 'LR', 0, 'C', true);
+            $this->pdf->Cell(15, 6, $this->invoice->type === 'factura' ? '18%' : '0%', 'LR', 0, 'C', true);
             $this->pdf->Cell(35, 6, 'S/ ' . number_format($this->order->delivery_cost, 2), 'LR', 0, 'R', true);
             $y += 6;
         }
@@ -252,13 +252,15 @@ class InvoicePdfGenerator
         $subtotal = $this->invoice->subtotal;
         $igv = $this->invoice->igv;
         $total = $this->invoice->total;
-        $delivery = $this->order->delivery_cost ?? 0;
-        $opGravada = $subtotal - $delivery;
+        // El subtotal del comprobante ya incluye items + delivery.
+        // La op. gravada solo se desglosa en factura; en boleta va en 0
+        // (el precio ya incluye impuestos).
+        $opGravada = $this->invoice->type === 'factura' ? $subtotal : 0;
 
         // Op. Gravada
         $this->pdf->SetXY(120, $y);
         $this->pdf->Cell(40, 5, 'OP. GRAVADA:', 0, 0, 'R');
-        $this->pdf->Cell(40, 5, 'S/ ' . number_format($opGravada > 0 ? $opGravada : $subtotal, 2), 0, 1, 'R');
+        $this->pdf->Cell(40, 5, 'S/ ' . number_format($opGravada, 2), 0, 1, 'R');
 
         // Op. Inafecta
         $this->pdf->SetXY(120, $y + 5);
@@ -270,14 +272,8 @@ class InvoicePdfGenerator
         $this->pdf->Cell(40, 5, 'OP. EXONERADA:', 0, 0, 'R');
         $this->pdf->Cell(40, 5, 'S/ 0.00', 0, 1, 'R');
 
-        if ($delivery > 0) {
-            $this->pdf->SetXY(120, $y + 15);
-            $this->pdf->Cell(40, 5, 'DELIVERY:', 0, 0, 'R');
-            $this->pdf->Cell(40, 5, 'S/ ' . number_format($delivery, 2), 0, 1, 'R');
-        }
-
         // IGV
-        $igvY = $delivery > 0 ? $y + 20 : $y + 15;
+        $igvY = $y + 15;
         $this->pdf->SetXY(120, $igvY);
         $this->pdf->Cell(40, 5, 'IGV (18%):', 0, 0, 'R');
         $this->pdf->Cell(40, 5, 'S/ ' . number_format($igv, 2), 0, 1, 'R');
@@ -371,7 +367,7 @@ class InvoicePdfGenerator
     {
         $serie = $this->invoice->type === 'factura' ? 'F001' : 'B001';
         $numero = str_pad($this->invoice->id, 8, '0', STR_PAD_LEFT);
-        return $serie . ' - ' . $numero;
+        return $serie . '-' . $numero;
     }
 
     private function utf8(string $text): string

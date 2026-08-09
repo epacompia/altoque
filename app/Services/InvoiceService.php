@@ -4,23 +4,36 @@ namespace App\Services;
 
 use App\Models\Invoice;
 use App\Models\Order;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
 
 class InvoiceService
 {
     public function createForOrder(Order $order): Invoice
     {
+        // Si ya existe un comprobante para el pedido, devolverlo sin duplicar
+        $existente = Invoice::where('order_id', $order->id)->first();
+        if ($existente) {
+            Log::info('Invoice ya existente para el pedido, no se duplica', [
+                'invoice_id' => $existente->id,
+                'order_id' => $order->id,
+            ]);
+            return $existente;
+        }
+
         $type = $order->invoice_type ?? 'boleta';
 
-        $subtotal = $order->subtotal ?? $order->total; // assume order has subtotal
-        $igv = round(($subtotal * 0.18), 2);
-        $total = $subtotal + $igv;
+        // Montos del comprobante = montos reales pagados del pedido.
+        // El subtotal del comprobante incluye items + delivery (total gravado);
+        // el IGV ya fue calculado al crear el pedido (18% solo para factura,
+        // 0 para boleta); el total coincide exactamente con lo pagado.
+        $subtotal = round((float) $order->subtotal + (float) $order->delivery_cost, 2);
+        $igv = (float) $order->igv;
+        $total = round($subtotal + $igv, 2);
 
         $invoice = Invoice::create([
             'order_id' => $order->id,
-            'seller_id' => $order->stall_id ?? null,
-            'customer_name' => $order->customer_name ?? ($order->user->name ?? null),
+            'seller_id' => $order->stall?->seller_id,
+            'customer_name' => $order->customer_name ?? ($order->client->name ?? null),
             'customer_document_type' => $order->customer_document_type ?? null,
             'customer_document_number' => $order->customer_document_number ?? null,
             'type' => $type,

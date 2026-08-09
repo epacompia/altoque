@@ -1,3162 +1,4187 @@
 {
-	"info": {
-		"_postman_id": "1929dfc1-a6dc-453f-bccb-e18982eade7e",
-		"name": "Altoque",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "31556369"
-	},
-	"item": [
-		{
-			"name": "Auth",
-			"item": [
-				{
-					"name": "Register",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json",
-								"type": "text"
-							},
-							{
-								"key": "Accept",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"name\": \"Juan Perez\",\n    \"email\": \"juan@example.com\",\n    \"password\": \"password123\",\n    \"password_confirmation\": \"password123\",\n    \"first_name\": \"Juan\",\n    \"last_name\": \"Perez\",\n    \"phone\": \"999888777\",\n    \"dni\": \"12345678\",\n    \"address\": \"Av. Principal 123\",\n    \"district\": \"Miraflores\",\n    \"department\": \"Lima\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "http://127.0.0.1:8000/api/register",
-							"protocol": "http",
-							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
-							],
-							"port": "8000",
-							"path": [
-								"register"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Login",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json",
-								"type": "text"
-							},
-							{
-								"key": "Accept",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"email\": \"juan@example.com\",\n    \"password\": \"password123\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "http://127.0.0.1:8000/api/login",
-							"protocol": "http",
-							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
-							],
-							"port": "8000",
-							"path": [
-								"login"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Logout",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "TOKEN_CLIENTE",
-									"type": "string"
-								}
-							]
-						},
-						"method": "POST",
-						"header": [
-							{
-								"key": "Accept",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "http://127.0.0.1:8000/api/logout",
-							"protocol": "http",
-							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
-							],
-							"port": "8000",
-							"path": [
-								"logout"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Test Token (desarrollo)",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Accept",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "http://127.0.0.1:8000/api/test-token",
-							"protocol": "http",
-							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
-							],
-							"port": "8000",
-							"path": [
-								"api",
-								"test-token"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "RF1 - Google OAuth",
-			"item": [
-				{
-					"name": "RF1 - Google Login (redirige a Google)",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Accept",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "http://127.0.0.1:8000/api/auth/google",
-							"protocol": "http",
-							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
-							],
-							"port": "8000",
-							"path": [
-								"auth",
-								"google"
-							]
-						},
-						"description": "Redirige al usuario a la pÃ¡gina de login de Google. Abrir en navegador."
-					},
-					"response": []
-				},
-				{
-					"name": "RF1 - Google Callback",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Accept",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "http://127.0.0.1:8000/api/auth/google/callback?code=CODIGO_DE_GOOGLE",
-							"protocol": "http",
-							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
-							],
-							"port": "8000",
-							"path": [
-								"auth",
-								"google",
-								"callback"
-							],
-							"query": [
-								{
-									"key": "code",
-									"value": "CODIGO_DE_GOOGLE",
-									"description": "CÃ³digo de autorizaciÃ³n devuelto por Google"
-								}
-							]
-						},
-						"description": "Google redirige aquÃ­ con el cÃ³digo de autorizaciÃ³n. Retorna token de acceso."
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "RF2 - ActualizaciÃ³n de Usuario",
-			"item": [
-				{
-					"name": "RF2 - ActualizaciÃ³n de Usuarios",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "TOKEN_CLIENTE",
-									"type": "string"
-								}
-							]
-						},
-						"method": "PUT",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json",
-								"type": "text"
-							},
-							{
-								"key": "Accept",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"phone\": \"987546758\",\n    \"dni\": \"43908196\",\n    \"address\": \"Av. Lima 123\",\n    \"district\": \"Villa el Salvador\",\n    \"department\": \"Lima\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "http://127.0.0.1:8000/api/user/update",
-							"protocol": "http",
-							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
-							],
-							"port": "8000",
-							"path": [
-								"api",
-								"user",
-								"update"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "RF3 - Recuperar ContraseÃ±a (OTP SMS)",
-			"item": [
-				{
-					"name": "RF3 - EnvÃ­o OTP SMS",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json",
-								"type": "text"
-							},
-							{
-								"key": "Accept",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"phone\": \"987546758\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "http://127.0.0.1:8000/api/send-otp",
-							"protocol": "http",
-							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
-							],
-							"port": "8000",
-							"path": [
-								"api",
-								"send-otp"
-							]
-						},
-						"description": "EnvÃ­a un cÃ³digo OTP de 6 dÃ­gitos al nÃºmero de telÃ©fono registrado. Expira en 5 minutos."
-					},
-					"response": []
-				},
-				{
-					"name": "RF3 - Validar OTP SMS",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json",
-								"type": "text"
-							},
-							{
-								"key": "Accept",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"phone\": \"987546758\",\n    \"otp\": \"123456\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "http://127.0.0.1:8000/api/verify-otp",
-							"protocol": "http",
-							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
-							],
-							"port": "8000",
-							"path": [
-								"api",
-								"verify-otp"
-							]
-						},
-						"description": "Verifica que el OTP sea vÃ¡lido y no haya expirado."
-					},
-					"response": []
-				},
-				{
-					"name": "RF3 - Cambiar ContraseÃ±a SMS",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json",
-								"type": "text"
-							},
-							{
-								"key": "Accept",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"phone\": \"987546758\",\n    \"otp\": \"123456\",\n    \"password\": \"nuevaPassword123\",\n    \"password_confirmation\": \"nuevaPassword123\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "http://127.0.0.1:8000/api/reset-password",
-							"protocol": "http",
-							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
-							],
-							"port": "8000",
-							"path": [
-								"api",
-								"reset-password"
-							]
-						},
-						"description": "Restablece la contraseÃ±a usando el OTP verificado. Requiere password y password_confirmation."
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "RF4 - Dashboard",
-			"item": [
-				{
-					"name": "RF4 - Dashboard",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "TOKEN_CLIENTE",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [
-							{
-								"key": "Accept",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "http://127.0.0.1:8000/api/dashboard",
-							"protocol": "http",
-							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
-							],
-							"port": "8000",
-							"path": [
-								"api",
-								"dashboard"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "RF6 - Puestos y MenÃº",
-			"item": [
-				{
-					"name": "RF6 - Convertirse a Vendedor",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "TOKEN_CLIENTE",
-									"type": "string"
-								}
-							]
-						},
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json",
-								"type": "text"
-							},
-							{
-								"key": "Accept",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"nombre_puesto\": \"Anticuchos de la TÃ­a Rosa\",\n    \"direccion\": \"Av. Grau 456, Lima\",\n    \"telefono\": \"987654321\",\n    \"horario_apertura\": \"10:00\",\n    \"horario_cierre\": \"22:00\",\n    \"latitud\": -12.0464,\n    \"longitud\": -77.0428,\n    \"descripcion\": \"Los mejores anticuchos de Lima\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "http://127.0.0.1:8000/api/convertirse-vendedor",
-							"protocol": "http",
-							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
-							],
-							"port": "8000",
-							"path": [
-								"api",
-								"convertirse-vendedor"
-							]
-						},
-						"description": "Convierte un cliente en vendedor creando su puesto de comida. Requiere token de cliente (role: client)."
-					},
-					"response": []
-				},
-				{
-					"name": "RF6 - Test 1 - GET Mi Puesto",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "TOKEN_VENDEDOR",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [
-							{
-								"key": "Accept",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "http://127.0.0.1:8000/api/mis-puesto",
-							"protocol": "http",
-							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
-							],
-							"port": "8000",
-							"path": [
-								"api",
-								"mis-puesto"
-							]
-						},
-						"description": "Obtiene la informaciÃ³n del puesto del vendedor autenticado."
-					},
-					"response": []
-				},
-				{
-					"name": "RF6 - Test 2 - Generar QR",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "TOKEN_VENDEDOR",
-									"type": "string"
-								}
-							]
-						},
-						"method": "POST",
-						"header": [
-							{
-								"key": "Accept",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "http://127.0.0.1:8000/api/mis-puesto/generar-qr",
-							"protocol": "http",
-							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
-							],
-							"port": "8000",
-							"path": [
-								"api",
-								"mis-puesto",
-								"generar-qr"
-							]
-						},
-						"description": "Genera un código QR SVG del menú del puesto."
-					},
-					"response": []
-				},
-				{
-					"name": "RF6 - Test 3 - Crear Categoría",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "TOKEN_VENDEDOR",
-									"type": "string"
-								}
-							]
-						},
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json",
-								"type": "text"
-							},
-							{
-								"key": "Accept",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"nombre\": \"Anticuchos\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "http://127.0.0.1:8000/api/mis-categorias",
-							"protocol": "http",
-							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
-							],
-							"port": "8000",
-							"path": [
-								"api",
-								"mis-categorias"
-							]
-						},
-						"description": "Crea una nueva categoría para clasificar productos del puesto."
-					},
-					"response": []
-				},
-				{
-					"name": "RF6 - Test 5 - Crear Producto 1",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "TOKEN_VENDEDOR",
-									"type": "string"
-								}
-							]
-						},
-						"method": "POST",
-						"header": [
-							{
-								"key": "Accept",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "formdata",
-							"formdata": [
-								{
-									"key": "nombre",
-									"value": "Anticucho de CorazÃ³n",
-									"type": "text"
-								},
-								{
-									"key": "descripcion",
-									"value": "Anticucho de corazÃ³n de res con papas doradas",
-									"type": "text"
-								},
-								{
-									"key": "precio",
-									"value": "12.50",
-									"type": "text"
-								},
-								{
-									"key": "categoria_id",
-									"value": "1",
-									"type": "text"
-								},
-								{
-									"key": "activo",
-									"value": "1",
-									"type": "text"
-								},
-								{
-									"key": "destacado",
-									"value": "0",
-									"type": "text"
-								},
-								{
-									"key": "imagen",
-									"value": "",
-									"description": "(Opcional) Imagen del producto - jpeg, png, jpg, gif - max 2MB",
-									"type": "file"
-								}
-							]
-						},
-						"url": {
-							"raw": "http://127.0.0.1:8000/api/mis-productos",
-							"protocol": "http",
-							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
-							],
-							"port": "8000",
-							"path": [
-								"api",
-								"mis-productos"
-							]
-						},
-						"description": "Crea un producto nuevo para el puesto del vendedor. Usa form-data para poder adjuntar imagen."
-					},
-					"response": []
-				},
-				{
-					"name": "RF6 - Test 6 - Crear Producto 2 (Destacado Oferta del día)",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "TOKEN_VENDEDOR",
-									"type": "string"
-								}
-							]
-						},
-						"method": "POST",
-						"header": [
-							{
-								"key": "Accept",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "formdata",
-							"formdata": [
-								{
-									"key": "nombre",
-									"value": "Combo Anticucho + Chicha",
-									"type": "text"
-								},
-								{
-									"key": "descripcion",
-									"value": "Oferta especial: Anticucho completo con chicha morada",
-									"type": "text"
-								},
-								{
-									"key": "precio",
-									"value": "18.00",
-									"type": "text"
-								},
-								{
-									"key": "categoria_id",
-									"value": "1",
-									"type": "text"
-								},
-								{
-									"key": "activo",
-									"value": "1",
-									"type": "text"
-								},
-								{
-									"key": "destacado",
-									"value": "1",
-									"type": "text"
-								},
-								{
-									"key": "imagen",
-									"value": "",
-									"description": "(Opcional) Imagen del producto",
-									"type": "file"
-								}
-							]
-						},
-						"url": {
-							"raw": "http://127.0.0.1:8000/api/mis-productos",
-							"protocol": "http",
-							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
-							],
-							"port": "8000",
-							"path": [
-								"api",
-								"mis-productos"
-							]
-						},
-						"description": "Crea un producto destacado (oferta del dÃ­a) con destacado=1."
-					},
-					"response": []
-				},
-				{
-					"name": "RF6 - Test 7 - GET Mis Productos",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "TOKEN_VENDEDOR",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [
-							{
-								"key": "Accept",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "http://127.0.0.1:8000/api/mis-productos",
-							"protocol": "http",
-							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
-							],
-							"port": "8000",
-							"path": [
-								"api",
-								"mis-productos"
-							]
-						},
-						"description": "Lista todos los productos del vendedor (activos e inactivos) con sus cremas asociadas."
-					},
-					"response": []
-				},
-				{
-					"name": "RF6 - Test 8 - PATCH Desactivar Producto",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "TOKEN_VENDEDOR",
-									"type": "string"
-								}
-							]
-						},
-						"method": "PATCH",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json",
-								"type": "text"
-							},
-							{
-								"key": "Accept",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"activo\": false\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "http://127.0.0.1:8000/api/mis-productos/1",
-							"protocol": "http",
-							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
-							],
-							"port": "8000",
-							"path": [
-								"api",
-								"mis-productos",
-								"1"
-							]
-						},
-						"description": "Desactiva un producto especÃ­fico por ID. TambiÃ©n se puede usar para actualizar nombre, precio, descripciÃ³n, etc."
-					},
-					"response": []
-				},
-				{
-					"name": "RF6 - Test 9 - GET Menú SIN Login (Público)",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Accept",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "http://127.0.0.1:8000/api/menu/1",
-							"protocol": "http",
-							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
-							],
-							"port": "8000",
-							"path": [
-								"api",
-								"menu",
-								"1"
-							]
-						},
-						"description": "Ver el menÃº pÃºblico de un puesto. Se puede usar el ID o el slug del puesto. No requiere autenticaciÃ³n."
-					},
-					"response": []
-				},
-				{
-					"name": "RF6 - Test 10 - GET Menú CON Login",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "TOKEN_CLIENTE",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [
-							{
-								"key": "Accept",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "http://127.0.0.1:8000/api/menu/1",
-							"protocol": "http",
-							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
-							],
-							"port": "8000",
-							"path": [
-								"api",
-								"menu",
-								"1"
-							]
-						},
-						"description": "Ver el menÃº de un puesto como usuario autenticado. Retorna usuario_autenticado: true."
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "RF8 - Cremas / AcompaÃ±amientos",
-			"item": [
-				{
-					"name": "RF8 - Test 1 - Crear Crema (Topping)",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "TOKEN_VENDEDOR",
-									"type": "string"
-								}
-							]
-						},
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json",
-								"type": "text"
-							},
-							{
-								"key": "Accept",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"nombre\": \"Crema de AjÃ­\",\n    \"precio_adicional\": 1.50,\n    \"descripcion\": \"Crema de ajÃ­ amarillo casera\",\n    \"activa\": true\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "http://127.0.0.1:8000/api/mis-cremas",
-							"protocol": "http",
-							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
-							],
-							"port": "8000",
-							"path": [
-								"api",
-								"mis-cremas"
-							]
-						},
-						"description": "Crea una nueva crema/acompaÃ±amiento para el puesto del vendedor."
-					},
-					"response": []
-				},
-				{
-					"name": "RF8 - Test 2 - Listar Mis Cremas",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "TOKEN_VENDEDOR",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [
-							{
-								"key": "Accept",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "http://127.0.0.1:8000/api/mis-cremas",
-							"protocol": "http",
-							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
-							],
-							"port": "8000",
-							"path": [
-								"api",
-								"mis-cremas"
-							]
-						},
-						"description": "Lista todas las cremas/acompaÃ±amientos del vendedor con cantidad de productos asociados."
-					},
-					"response": []
-				},
-				{
-					"name": "RF8 - Test 3 - Actualizar Crema",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "TOKEN_VENDEDOR",
-									"type": "string"
-								}
-							]
-						},
-						"method": "PATCH",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json",
-								"type": "text"
-							},
-							{
-								"key": "Accept",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"nombre\": \"Crema de AjÃ­ Especial\",\n    \"precio_adicional\": 2.00,\n    \"descripcion\": \"Crema de ajÃ­ mejorada con rocoto\",\n    \"activa\": true\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "http://127.0.0.1:8000/api/mis-cremas/1",
-							"protocol": "http",
-							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
-							],
-							"port": "8000",
-							"path": [
-								"api",
-								"mis-cremas",
-								"1"
-							]
-						},
-						"description": "Actualiza una crema existente. Todos los campos son opcionales."
-					},
-					"response": []
-				},
-				{
-					"name": "RF8 - Test 4 - Eliminar Crema",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "TOKEN_VENDEDOR",
-									"type": "string"
-								}
-							]
-						},
-						"method": "DELETE",
-						"header": [
-							{
-								"key": "Accept",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "http://127.0.0.1:8000/api/mis-cremas/1",
-							"protocol": "http",
-							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
-							],
-							"port": "8000",
-							"path": [
-								"api",
-								"mis-cremas",
-								"1"
-							]
-						},
-						"description": "Elimina una crema y la desasocia de todos los productos."
-					},
-					"response": []
-				},
-				{
-					"name": "RF8 - Test 5 - Asociar Crema a Producto",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "TOKEN_VENDEDOR",
-									"type": "string"
-								}
-							]
-						},
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json",
-								"type": "text"
-							},
-							{
-								"key": "Accept",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"crema_id\": 1,\n    \"requerida\": false\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "http://127.0.0.1:8000/api/mis-productos/1/cremas",
-							"protocol": "http",
-							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
-							],
-							"port": "8000",
-							"path": [
-								"api",
-								"mis-productos",
-								"1",
-								"cremas"
-							]
-						},
-						"description": "Asocia una crema existente a un producto. La crema debe pertenecer al mismo puesto."
-					},
-					"response": []
-				},
-				{
-					"name": "RF8 - Test 6 - Ver Cremas de un Producto",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "TOKEN_VENDEDOR",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [
-							{
-								"key": "Accept",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "http://127.0.0.1:8000/api/mis-productos/1/cremas",
-							"protocol": "http",
-							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
-							],
-							"port": "8000",
-							"path": [
-								"api",
-								"mis-productos",
-								"1",
-								"cremas"
-							]
-						},
-						"description": "Lista todas las cremas activas asociadas a un producto especÃ­fico."
-					},
-					"response": []
-				},
-				{
-					"name": "RF8 - Test 7 - Desasociar Crema de Producto",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "TOKEN_VENDEDOR",
-									"type": "string"
-								}
-							]
-						},
-						"method": "DELETE",
-						"header": [
-							{
-								"key": "Accept",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "http://127.0.0.1:8000/api/mis-productos/1/cremas/1",
-							"protocol": "http",
-							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
-							],
-							"port": "8000",
-							"path": [
-								"api",
-								"mis-productos",
-								"1",
-								"cremas",
-								"1"
-							]
-						},
-						"description": "Desasocia una crema de un producto especÃ­fico. No elimina la crema, solo quita la relaciÃ³n."
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "RF9 - MenÃº Offline",
-			"item": [
-				{
-					"name": "RF9 - Descargar MenÃº Offline",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "TOKEN_VENDEDOR",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [
-							{
-								"key": "Accept",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "http://127.0.0.1:8000/api/mis-productos/offline",
-							"protocol": "http",
-							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
-							],
-							"port": "8000",
-							"path": [
-								"api",
-								"mis-productos",
-								"offline"
-							]
-						},
-						"description": "Descarga los productos activos del vendedor para uso offline."
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "RF10 - Horarios y Pausas",
-			"item": [
-				{
-					"name": "RF10 - Test 1 - Ver horarios del puesto",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "TOKEN_VENDEDOR",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [
-							{
-								"key": "Accept",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "http://127.0.0.1:8000/api/mis-puesto/horarios",
-							"protocol": "http",
-							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
-							],
-							"port": "8000",
-							"path": [
-								"api",
-								"mis-puesto",
-								"horarios"
-							]
-						},
-						"description": "Obtiene horarios actuales del puesto (apertura, cierre, estado abierto/pausa)."
-					},
-					"response": []
-				},
-				{
-					"name": "RF10 - Test 2 - Actualizar horario de apertura y cierre",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "TOKEN_VENDEDOR",
-									"type": "string"
-								}
-							]
-						},
-						"method": "PUT",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json",
-								"type": "text"
-							},
-							{
-								"key": "Accept",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"horario_apertura\": \"10:00\",\n    \"horario_cierre\": \"23:30\",\n    \"activo\": true\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "http://127.0.0.1:8000/api/mis-puesto/horarios",
-							"protocol": "http",
-							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
-							],
-							"port": "8000",
-							"path": [
-								"api",
-								"mis-puesto",
-								"horarios"
-							]
-						},
-						"description": "Actualiza el horario de apertura y cierre del puesto."
-					},
-					"response": []
-				},
-				{
-					"name": "RF10 - Test 3 - Crear pausa temporal",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "TOKEN_VENDEDOR",
-									"type": "string"
-								}
-							]
-						},
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json",
-								"type": "text"
-							},
-							{
-								"key": "Accept",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"razon\": \"Descanso para almuerzo\",\n    \"inicio\": \"2026-03-03 13:00\",\n    \"fin\": \"2026-03-03 14:00\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "http://127.0.0.1:8000/api/mis-puesto/pausas",
-							"protocol": "http",
-							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
-							],
-							"port": "8000",
-							"path": [
-								"api",
-								"mis-puesto",
-								"pausas"
-							]
-						},
-						"description": "Crea una pausa temporal para el puesto (descanso, mantenimiento, etc.)."
-					},
-					"response": []
-				},
-				{
-					"name": "RF10 - Test 4 - Listar pausas del puesto",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "TOKEN_VENDEDOR",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [
-							{
-								"key": "Accept",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "http://127.0.0.1:8000/api/mis-puesto/pausas",
-							"protocol": "http",
-							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
-							],
-							"port": "8000",
-							"path": [
-								"api",
-								"mis-puesto",
-								"pausas"
-							]
-						},
-						"description": "Lista todas las pausas del puesto (historial completo)."
-					},
-					"response": []
-				},
-				{
-					"name": "RF10 - Test 5 - Actualizar pausa existente",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "TOKEN_VENDEDOR",
-									"type": "string"
-								}
-							]
-						},
-						"method": "PATCH",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json",
-								"type": "text"
-							},
-							{
-								"key": "Accept",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"razon\": \"Descanso para almuerzo - extendido\",\n    \"fin\": \"2026-03-03 14:30\",\n    \"activa\": true\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "http://127.0.0.1:8000/api/mis-puesto/pausas/1",
-							"protocol": "http",
-							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
-							],
-							"port": "8000",
-							"path": [
-								"api",
-								"mis-puesto",
-								"pausas",
-								"1"
-							]
-						},
-						"description": "Actualiza una pausa existente (razÃ³n, horario o estado)."
-					},
-					"response": []
-				},
-				{
-					"name": "RF10 - Test 6 - Eliminar pausa",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "TOKEN_VENDEDOR",
-									"type": "string"
-								}
-							]
-						},
-						"method": "DELETE",
-						"header": [
-							{
-								"key": "Accept",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "http://127.0.0.1:8000/api/mis-puesto/pausas/1",
-							"protocol": "http",
-							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
-							],
-							"port": "8000",
-							"path": [
-								"api",
-								"mis-puesto",
-								"pausas",
-								"1"
-							]
-						},
-						"description": "Elimina/cancela una pausa temporal."
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "RF11 - Pedidos y Pagos",
-			"item": [
-				{
-					"name": "RF11 - Test 1 - Crear pedido (sin pagar)",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "TOKEN_CLIENTE",
-									"type": "string"
-								}
-							]
-						},
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json",
-								"type": "text"
-							},
-							{
-								"key": "Accept",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"stall_id\": 1,\n    \"productos\": [\n        {\n            \"producto_id\": 1,\n            \"cantidad\": 2,\n            \"cremas\": [1, 2]\n        },\n        {\n            \"producto_id\": 2,\n            \"cantidad\": 1\n        }\n    ],\n    \"direccion\": \"Jr. Manco CÃ¡pac 456, La BreÃ±a, Lima\",\n    \"with_delivery\": true,\n    \"delivery_latitude\": -12.0600,\n    \"delivery_longitude\": -77.0400,\n    \"notas\": \"Sin cebolla por favor\",\n    \"invoice_requested\": false\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "http://127.0.0.1:8000/api/pedidos",
-							"protocol": "http",
-							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
-							],
-							"port": "8000",
-							"path": [
-								"api",
-								"pedidos"
-							]
-						},
-						"description": "Crea un pedido en estado 'pending' sin procesar pago. Requiere token de cliente. Calcula subtotal, IGV (18%), delivery y tiempo estimado."
-					},
-					"response": []
-				},
-				{
-					"name": "RF11 - Test 2 - Procesar pago del pedido",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "TOKEN_CLIENTE",
-									"type": "string"
-								}
-							]
-						},
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json",
-								"type": "text"
-							},
-							{
-								"key": "Accept",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"metodo_pago\": \"mock\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "http://127.0.0.1:8000/api/pedidos/1/pagar",
-							"protocol": "http",
-							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
-							],
-							"port": "8000",
-							"path": [
-								"api",
-								"pedidos",
-								"1",
-								"pagar"
-							]
-						},
-						"description": "Procesa el pago de un pedido pendiente. MÃ©todos: mock, yape, plin. Se procesa async en queue. Responde 202 Accepted."
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "RF12 - Detalle de Pedidos",
-			"item": [
-				{
-					"name": "RF12 - Test 3 - Obtener detalle del pedido",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "TOKEN_CLIENTE",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [
-							{
-								"key": "Accept",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "http://127.0.0.1:8000/api/pedidos/1",
-							"protocol": "http",
-							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
-							],
-							"port": "8000",
-							"path": [
-								"api",
-								"pedidos",
-								"1"
-							]
-						},
-						"description": "Obtiene detalle completo del pedido incluyendo items, pago y timeline de estados."
-					},
-					"response": []
-				},
-				{
-					"name": "RF12 - Test 4 - Listar todos mis pedidos",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "TOKEN_CLIENTE",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [
-							{
-								"key": "Accept",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "http://127.0.0.1:8000/api/pedidos?page=1",
-							"protocol": "http",
-							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
-							],
-							"port": "8000",
-							"path": [
-								"api",
-								"pedidos"
-							],
-							"query": [
-								{
-									"key": "page",
-									"value": "1"
-								}
-							]
-						},
-						"description": "Lista todos los pedidos del cliente autenticado con paginaciÃ³n (10 por pÃ¡gina)."
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "RF13 - Tiempos de PreparaciÃ³n",
-			"item": [
-				{
-					"name": "RF13 - Configurar tiempos de preparaciÃ³n",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "TOKEN_VENDEDOR",
-									"type": "string"
-								}
-							]
-						},
-						"method": "PUT",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json",
-								"type": "text"
-							},
-							{
-								"key": "Accept",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"base_preparation_time\": 15,\n    \"time_per_product\": 5,\n    \"time_per_active_order\": 5,\n    \"time_for_delivery\": 10\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "http://127.0.0.1:8000/api/mis-puesto/tiempos-preparacion",
-							"protocol": "http",
-							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
-							],
-							"port": "8000",
-							"path": [
-								"api",
-								"mis-puesto",
-								"tiempos-preparacion"
-							]
-						},
-						"description": "Configura los tiempos base de preparaciÃ³n del puesto para el cÃ¡lculo de tiempo estimado de entrega."
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "RF14 - Estados del Pedido",
-			"item": [
-				{
-					"name": "RF14 - Test 1 - Ver pedidos activos del puesto (confirmed)",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "TOKEN_VENDEDOR",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [
-							{
-								"key": "Accept",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "http://127.0.0.1:8000/api/mis-pedidos",
-							"protocol": "http",
-							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
-							],
-							"port": "8000",
-							"path": [
-								"api",
-								"mis-pedidos"
-							]
-						},
-						"description": "Lista pedidos activos del puesto (confirmed, preparing, ready). Requiere token de vendedor."
-					},
-					"response": []
-				},
-				{
-					"name": "RF14 - Test 2 - Cambiar estado a PREPARING",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "TOKEN_VENDEDOR",
-									"type": "string"
-								}
-							]
-						},
-						"method": "PATCH",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json",
-								"type": "text"
-							},
-							{
-								"key": "Accept",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"nuevo_estado\": \"preparing\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "http://127.0.0.1:8000/api/pedidos/1/cambiar-estado",
-							"protocol": "http",
-							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
-							],
-							"port": "8000",
-							"path": [
-								"api",
-								"pedidos",
-								"1",
-								"cambiar-estado"
-							]
-						},
-						"description": "Cambia el estado del pedido a 'preparing' (comenzar preparaciÃ³n). TransiciÃ³n: confirmed â†’ preparing."
-					},
-					"response": []
-				},
-				{
-					"name": "RF14 - Test 3 - Cambiar estado a READY",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "TOKEN_VENDEDOR",
-									"type": "string"
-								}
-							]
-						},
-						"method": "PATCH",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json",
-								"type": "text"
-							},
-							{
-								"key": "Accept",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"nuevo_estado\": \"ready\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "http://127.0.0.1:8000/api/pedidos/1/cambiar-estado",
-							"protocol": "http",
-							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
-							],
-							"port": "8000",
-							"path": [
-								"api",
-								"pedidos",
-								"1",
-								"cambiar-estado"
-							]
-						},
-						"description": "Cambia el estado a 'ready' (pedido listo para recoger/enviar). TransiciÃ³n: preparing â†’ ready."
-					},
-					"response": []
-				},
-				{
-					"name": "RF14 - Test 4 - Cambiar estado a EN_CAMINO",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "TOKEN_VENDEDOR",
-									"type": "string"
-								}
-							]
-						},
-						"method": "PATCH",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json",
-								"type": "text"
-							},
-							{
-								"key": "Accept",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"nuevo_estado\": \"en_camino\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "http://127.0.0.1:8000/api/pedidos/1/cambiar-estado",
-							"protocol": "http",
-							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
-							],
-							"port": "8000",
-							"path": [
-								"api",
-								"pedidos",
-								"1",
-								"cambiar-estado"
-							]
-						},
-						"description": "Cambia el estado a 'en_camino' (en camino de entrega, si tiene delivery). TransiciÃ³n: ready â†’ en_camino."
-					},
-					"response": []
-				},
-				{
-					"name": "RF14 - Test 5 - Cambiar estado a DELIVERED",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "TOKEN_VENDEDOR",
-									"type": "string"
-								}
-							]
-						},
-						"method": "PATCH",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json",
-								"type": "text"
-							},
-							{
-								"key": "Accept",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"nuevo_estado\": \"delivered\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "http://127.0.0.1:8000/api/pedidos/1/cambiar-estado",
-							"protocol": "http",
-							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
-							],
-							"port": "8000",
-							"path": [
-								"api",
-								"pedidos",
-								"1",
-								"cambiar-estado"
-							]
-						},
-						"description": "Cambia el estado a 'delivered' (pedido entregado). TransiciÃ³n: ready â†’ delivered o en_camino â†’ delivered."
-					},
-					"response": []
-				},
-				{
-					"name": "RF14 - Test 6 - Ver timeline completo (como cliente)",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "TOKEN_CLIENTE",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [
-							{
-								"key": "Accept",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "http://127.0.0.1:8000/api/pedidos/1",
-							"protocol": "http",
-							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
-							],
-							"port": "8000",
-							"path": [
-								"api",
-								"pedidos",
-								"1"
-							]
-						},
-						"description": "Ver detalle completo del pedido con timeline de todos los estados y timestamps."
-					},
-					"response": []
-				},
-				{
-					"name": "RF14 - Test 7 - Error: TransiciÃ³n invÃ¡lida",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "TOKEN_VENDEDOR",
-									"type": "string"
-								}
-							]
-						},
-						"method": "PATCH",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json",
-								"type": "text"
-							},
-							{
-								"key": "Accept",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"nuevo_estado\": \"pending\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "http://127.0.0.1:8000/api/pedidos/1/cambiar-estado",
-							"protocol": "http",
-							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
-							],
-							"port": "8000",
-							"path": [
-								"api",
-								"pedidos",
-								"1",
-								"cambiar-estado"
-							]
-						},
-						"description": "Intenta una transiciÃ³n invÃ¡lida para probar la validaciÃ³n. Debe retornar error 409 con transiciones permitidas."
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "RF15 - Cancelar Pedido",
-			"item": [
-				{
-					"name": "RF15 - Cancelar pedido (como cliente)",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "TOKEN_CLIENTE",
-									"type": "string"
-								}
-							]
-						},
-						"method": "PATCH",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json",
-								"type": "text"
-							},
-							{
-								"key": "Accept",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"motivo\": \"Ya no quiero el pedido\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "http://127.0.0.1:8000/api/pedidos/1/cancelar",
-							"protocol": "http",
-							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
-							],
-							"port": "8000",
-							"path": [
-								"api",
-								"pedidos",
-								"1",
-								"cancelar"
-							]
-						},
-						"description": "Cancela un pedido. Solo permitido en estados: pending, confirmed, preparing. Si hubo pago se reembolsa."
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "RF16 - Cambiar DirecciÃ³n",
-			"item": [
-				{
-					"name": "RF16 - Cambiar direcciÃ³n de entrega",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "TOKEN_CLIENTE",
-									"type": "string"
-								}
-							]
-						},
-						"method": "PATCH",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json",
-								"type": "text"
-							},
-							{
-								"key": "Accept",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"nueva_direccion\": \"Av. Arequipa 1234, Lince, Lima\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "http://127.0.0.1:8000/api/pedidos/1/cambiar-direccion",
-							"protocol": "http",
-							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
-							],
-							"port": "8000",
-							"path": [
-								"api",
-								"pedidos",
-								"1",
-								"cambiar-direccion"
-							]
-						},
-						"description": "Cambia la direcciÃ³n de entrega. Solo permitido en estados: pending, confirmed. MÃ­nimo 10 caracteres."
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "RF17 - Pedidos del Vendedor",
-			"item": [
-				{
-					"name": "RF17 - Ver pedidos activos del puesto (vendedor)",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "TOKEN_VENDEDOR",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [
-							{
-								"key": "Accept",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "http://127.0.0.1:8000/api/mis-pedidos",
-							"protocol": "http",
-							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
-							],
-							"port": "8000",
-							"path": [
-								"api",
-								"mis-pedidos"
-							]
-						},
-						"description": "Lista pedidos activos del puesto del vendedor (confirmed, preparing, ready) con datos del cliente."
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "RF18 - Comisiones",
-			"item": [
-				{
-					"name": "RF18 - Calcular comisiÃ³n de un pedido",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "TOKEN_VENDEDOR",
-									"type": "string"
-								}
-							]
-						},
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json",
-								"type": "text"
-							},
-							{
-								"key": "Accept",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"order_id\": 1\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "http://127.0.0.1:8000/api/comisiones/calcular",
-							"protocol": "http",
-							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
-							],
-							"port": "8000",
-							"path": [
-								"api",
-								"comisiones",
-								"calcular"
-							]
-						},
-						"description": "Calcula la comisiÃ³n de un pedido confirmado (pagado). Retorna monto, porcentaje, neto vendedor."
-					},
-					"response": []
-				},
-				{
-					"name": "RF18 - Obtener comisiÃ³n de un pedido",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "TOKEN_VENDEDOR",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [
-							{
-								"key": "Accept",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "http://127.0.0.1:8000/api/comisiones/pedido/1",
-							"protocol": "http",
-							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
-							],
-							"port": "8000",
-							"path": [
-								"api",
-								"comisiones",
-								"pedido",
-								"1"
-							]
-						},
-						"description": "Obtiene la comisiÃ³n calculada para un pedido especÃ­fico."
-					},
-					"response": []
-				},
-				{
-					"name": "RF18 - Listar reglas de comisiÃ³n (admin)",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "TOKEN_ADMIN",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [
-							{
-								"key": "Accept",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "http://127.0.0.1:8000/api/comisiones/reglas",
-							"protocol": "http",
-							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
-							],
-							"port": "8000",
-							"path": [
-								"api",
-								"comisiones",
-								"reglas"
-							]
-						},
-						"description": "Lista todas las reglas de comisiÃ³n configuradas. Solo admin."
-					},
-					"response": []
-				},
-				{
-					"name": "RF18 - Crear regla de comisiÃ³n (admin)",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "TOKEN_ADMIN",
-									"type": "string"
-								}
-							]
-						},
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json",
-								"type": "text"
-							},
-							{
-								"key": "Accept",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"name\": \"ComisiÃ³n estÃ¡ndar\",\n    \"percentage\": 10,\n    \"min_order_amount\": 0,\n    \"max_order_amount\": 999999,\n    \"is_active\": true\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "http://127.0.0.1:8000/api/comisiones/reglas",
-							"protocol": "http",
-							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
-							],
-							"port": "8000",
-							"path": [
-								"api",
-								"comisiones",
-								"reglas"
-							]
-						},
-						"description": "Crea una nueva regla de comisiÃ³n. Solo admin."
-					},
-					"response": []
-				},
-				{
-					"name": "RF18 - Actualizar regla de comisiÃ³n (admin)",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "TOKEN_ADMIN",
-									"type": "string"
-								}
-							]
-						},
-						"method": "PUT",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json",
-								"type": "text"
-							},
-							{
-								"key": "Accept",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"name\": \"ComisiÃ³n premium\",\n    \"percentage\": 15,\n    \"is_active\": true\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "http://127.0.0.1:8000/api/comisiones/reglas/1",
-							"protocol": "http",
-							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
-							],
-							"port": "8000",
-							"path": [
-								"api",
-								"comisiones",
-								"reglas",
-								"1"
-							]
-						},
-						"description": "Actualiza una regla de comisiÃ³n existente. Solo admin."
-					},
-					"response": []
-				},
-				{
-					"name": "RF18 - Eliminar regla de comisiÃ³n (admin)",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "TOKEN_ADMIN",
-									"type": "string"
-								}
-							]
-						},
-						"method": "DELETE",
-						"header": [
-							{
-								"key": "Accept",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "http://127.0.0.1:8000/api/comisiones/reglas/1",
-							"protocol": "http",
-							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
-							],
-							"port": "8000",
-							"path": [
-								"api",
-								"comisiones",
-								"reglas",
-								"1"
-							]
-						},
-						"description": "Elimina una regla de comisiÃ³n. Solo admin."
-					},
-					"response": []
-				},
-				{
-					"name": "RF18 - Reporte de comisiones (admin)",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "TOKEN_ADMIN",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [
-							{
-								"key": "Accept",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "http://127.0.0.1:8000/api/comisiones/reporte",
-							"protocol": "http",
-							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
-							],
-							"port": "8000",
-							"path": [
-								"api",
-								"comisiones",
-								"reporte"
-							]
-						},
-						"description": "Genera reporte de comisiones. Solo admin."
-					},
-					"response": []
-				},
-				{
-					"name": "RF18 - AuditorÃ­a de comisiones (admin)",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "TOKEN_ADMIN",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [
-							{
-								"key": "Accept",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "http://127.0.0.1:8000/api/comisiones/auditoria",
-							"protocol": "http",
-							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
-							],
-							"port": "8000",
-							"path": [
-								"api",
-								"comisiones",
-								"auditoria"
-							]
-						},
-						"description": "Consulta logs de auditorÃ­a de comisiones. Solo admin."
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "RF20 - Transferencias",
-			"item": [
-				{
-					"name": "RF20 - Transferir comisiones pendientes (admin)",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "TOKEN_ADMIN",
-									"type": "string"
-								}
-							]
-						},
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json",
-								"type": "text"
-							},
-							{
-								"key": "Accept",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "http://127.0.0.1:8000/api/comisiones/transferir",
-							"protocol": "http",
-							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
-							],
-							"port": "8000",
-							"path": [
-								"api",
-								"comisiones",
-								"transferir"
-							]
-						},
-						"description": "Transfiere comisiones pendientes a los vendedores. Solo admin."
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "RF21 - Comprobantes ElectrÃ³nicos",
-			"item": [
-				{
-					"name": "RF21 - Generar comprobante para pedido",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "TOKEN_CLIENTE",
-									"type": "string"
-								}
-							]
-						},
-						"method": "POST",
-						"header": [
-							{
-								"key": "Accept",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "http://127.0.0.1:8000/api/comprobantes/generar/1",
-							"protocol": "http",
-							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
-							],
-							"port": "8000",
-							"path": [
-								"api",
-								"comprobantes",
-								"generar",
-								"1"
-							]
-						},
-						"description": "Genera manualmente un comprobante electrÃ³nico para un pedido."
-					},
-					"response": []
-				},
-				{
-					"name": "RF21 - Descargar comprobante PDF",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "TOKEN_CLIENTE",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [
-							{
-								"key": "Accept",
-								"value": "application/pdf",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "http://127.0.0.1:8000/api/comprobantes/1/pdf",
-							"protocol": "http",
-							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
-							],
-							"port": "8000",
-							"path": [
-								"api",
-								"comprobantes",
-								"1",
-								"pdf"
-							]
-						},
-						"description": "Descarga el comprobante en formato PDF."
-					},
-					"response": []
-				},
-				{
-					"name": "RF21 - Descargar comprobante XML",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "TOKEN_CLIENTE",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [
-							{
-								"key": "Accept",
-								"value": "application/xml",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "http://127.0.0.1:8000/api/comprobantes/1/xml",
-							"protocol": "http",
-							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
-							],
-							"port": "8000",
-							"path": [
-								"api",
-								"comprobantes",
-								"1",
-								"xml"
-							]
-						},
-						"description": "Descarga el comprobante en formato XML."
-					},
-					"response": []
-				},
-				{
-					"name": "RF21 - Reintentar generaciÃ³n de comprobante (admin)",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "TOKEN_ADMIN",
-									"type": "string"
-								}
-							]
-						},
-						"method": "POST",
-						"header": [
-							{
-								"key": "Accept",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "http://127.0.0.1:8000/api/comprobantes/1/reintentar",
-							"protocol": "http",
-							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
-							],
-							"port": "8000",
-							"path": [
-								"api",
-								"comprobantes",
-								"1",
-								"reintentar"
-							]
-						},
-						"description": "Reintenta la generaciÃ³n de un comprobante fallido. Admin."
-					},
-					"response": []
-				},
-				{
-					"name": "RF21 - Listar comprobantes",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "TOKEN_CLIENTE",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [
-							{
-								"key": "Accept",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "http://127.0.0.1:8000/api/comprobantes",
-							"protocol": "http",
-							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
-							],
-							"port": "8000",
-							"path": [
-								"api",
-								"comprobantes"
-							]
-						},
-						"description": "Lista comprobantes. Clientes ven los suyos, admin ve todos."
-					},
-					"response": []
-				},
-				{
-					"name": "RF21 - Ver detalle de comprobante",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "TOKEN_CLIENTE",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [
-							{
-								"key": "Accept",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "http://127.0.0.1:8000/api/comprobantes/1",
-							"protocol": "http",
-							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
-							],
-							"port": "8000",
-							"path": [
-								"api",
-								"comprobantes",
-								"1"
-							]
-						},
-						"description": "Obtiene el detalle de un comprobante especÃ­fico."
-					},
-					"response": []
-				}
-			]
-		}
-	]
+  "info": {
+    "_postman_id": "1929dfc1-a6dc-453f-bccb-e18982eade7e",
+    "name": "Altoque",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "31556369"
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Juan Perez\",\n    \"email\": \"juan@example.com\",\n    \"password\": \"password123\",\n    \"password_confirmation\": \"password123\",\n    \"first_name\": \"Juan\",\n    \"last_name\": \"Perez\",\n    \"phone\": \"999888777\",\n    \"dni\": \"12345678\",\n    \"address\": \"Av. Principal 123\",\n    \"district\": \"Miraflores\",\n    \"department\": \"Lima\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/register",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "register"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"juan@example.com\",\n    \"password\": \"password123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/login",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "TOKEN_CLIENTE",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/logout",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "logout"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Test Token (desarrollo)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/test-token",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "test-token"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Perfil (GET /user)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "TOKEN_CLIENTE",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/user",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "user"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "RF1 - Google OAuth",
+      "item": [
+        {
+          "name": "RF1 - Google Login (redirige a Google)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/auth/google",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "auth",
+                "google"
+              ]
+            },
+            "description": "Redirige al usuario a la pÃ¡gina de login de Google. Abrir en navegador."
+          },
+          "response": []
+        },
+        {
+          "name": "RF1 - Google Callback",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/auth/google/callback?code=CODIGO_DE_GOOGLE",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "auth",
+                "google",
+                "callback"
+              ],
+              "query": [
+                {
+                  "key": "code",
+                  "value": "CODIGO_DE_GOOGLE",
+                  "description": "CÃ³digo de autorizaciÃ³n devuelto por Google"
+                }
+              ]
+            },
+            "description": "Google redirige aquÃ­ con el cÃ³digo de autorizaciÃ³n. Retorna token de acceso."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "RF2 - Actualización de Usuario",
+      "item": [
+        {
+          "name": "RF2 - Actualización de Usuarios",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "TOKEN_CLIENTE",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"phone\": \"987546758\",\n    \"dni\": \"43908196\",\n    \"address\": \"Av. Lima 123\",\n    \"district\": \"Villa el Salvador\",\n    \"department\": \"Lima\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/user/update",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "user",
+                "update"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "RF3 - Recuperar Contraseña (OTP SMS)",
+      "item": [
+        {
+          "name": "RF3 - Envío OTP SMS",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"phone\": \"987546758\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/send-otp",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "send-otp"
+              ]
+            },
+            "description": "EnvÃ­a un cÃ³digo OTP de 6 dÃ­gitos al nÃºmero de telÃ©fono registrado. Expira en 5 minutos."
+          },
+          "response": []
+        },
+        {
+          "name": "RF3 - Validar OTP SMS",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"phone\": \"987546758\",\n    \"otp\": \"123456\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/verify-otp",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "verify-otp"
+              ]
+            },
+            "description": "Verifica que el OTP sea vÃ¡lido y no haya expirado."
+          },
+          "response": []
+        },
+        {
+          "name": "RF3 - Cambiar Contraseña SMS",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"phone\": \"987546758\",\n    \"otp\": \"123456\",\n    \"password\": \"nuevaPassword123\",\n    \"password_confirmation\": \"nuevaPassword123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/reset-password",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "reset-password"
+              ]
+            },
+            "description": "Restablece la contraseÃ±a usando el OTP verificado. Requiere password y password_confirmation."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "RF4 - Dashboard",
+      "item": [
+        {
+          "name": "RF4 - Dashboard",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "TOKEN_CLIENTE",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/dashboard",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "dashboard"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "RF6 - Puestos y Menú",
+      "item": [
+        {
+          "name": "RF6 - Convertirse a Vendedor",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "TOKEN_CLIENTE",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"nombre_puesto\": \"Anticuchos de la TÃ­a Rosa\",\n    \"direccion\": \"Av. Grau 456, Lima\",\n    \"telefono\": \"987654321\",\n    \"horario_apertura\": \"10:00\",\n    \"horario_cierre\": \"22:00\",\n    \"latitud\": -12.0464,\n    \"longitud\": -77.0428,\n    \"descripcion\": \"Los mejores anticuchos de Lima\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/convertirse-vendedor",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "convertirse-vendedor"
+              ]
+            },
+            "description": "Convierte un cliente en vendedor creando su puesto de comida. Requiere token de cliente (role: client)."
+          },
+          "response": []
+        },
+        {
+          "name": "RF6 - Test 1 - GET Mi Puesto",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "TOKEN_VENDEDOR",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/mis-puesto",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "mis-puesto"
+              ]
+            },
+            "description": "Obtiene la informaciÃ³n del puesto del vendedor autenticado."
+          },
+          "response": []
+        },
+        {
+          "name": "RF6 - Test 2 - Generar QR",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "TOKEN_VENDEDOR",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/mis-puesto/generar-qr",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "mis-puesto",
+                "generar-qr"
+              ]
+            },
+            "description": "Genera un código QR SVG del menú del puesto."
+          },
+          "response": []
+        },
+        {
+          "name": "RF6 - Test 3 - Crear Categoría",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "TOKEN_VENDEDOR",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"nombre\": \"Anticuchos\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/mis-categorias",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "mis-categorias"
+              ]
+            },
+            "description": "Crea una nueva categoría para clasificar productos del puesto."
+          },
+          "response": []
+        },
+        {
+          "name": "RF6 - Test 5 - Crear Producto 1",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "TOKEN_VENDEDOR",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "nombre",
+                  "value": "Anticucho de CorazÃ³n",
+                  "type": "text"
+                },
+                {
+                  "key": "descripcion",
+                  "value": "Anticucho de corazÃ³n de res con papas doradas",
+                  "type": "text"
+                },
+                {
+                  "key": "precio",
+                  "value": "12.50",
+                  "type": "text"
+                },
+                {
+                  "key": "categoria_id",
+                  "value": "1",
+                  "type": "text"
+                },
+                {
+                  "key": "activo",
+                  "value": "1",
+                  "type": "text"
+                },
+                {
+                  "key": "destacado",
+                  "value": "0",
+                  "type": "text"
+                },
+                {
+                  "key": "imagen",
+                  "value": "",
+                  "description": "(Opcional) Imagen del producto - jpeg, png, jpg, gif - max 2MB",
+                  "type": "file"
+                }
+              ]
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/mis-productos",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "mis-productos"
+              ]
+            },
+            "description": "Crea un producto nuevo para el puesto del vendedor. Usa form-data para poder adjuntar imagen."
+          },
+          "response": []
+        },
+        {
+          "name": "RF6 - Test 6 - Crear Producto 2 (Destacado Oferta del día)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "TOKEN_VENDEDOR",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "nombre",
+                  "value": "Combo Anticucho + Chicha",
+                  "type": "text"
+                },
+                {
+                  "key": "descripcion",
+                  "value": "Oferta especial: Anticucho completo con chicha morada",
+                  "type": "text"
+                },
+                {
+                  "key": "precio",
+                  "value": "18.00",
+                  "type": "text"
+                },
+                {
+                  "key": "categoria_id",
+                  "value": "1",
+                  "type": "text"
+                },
+                {
+                  "key": "activo",
+                  "value": "1",
+                  "type": "text"
+                },
+                {
+                  "key": "destacado",
+                  "value": "1",
+                  "type": "text"
+                },
+                {
+                  "key": "imagen",
+                  "value": "",
+                  "description": "(Opcional) Imagen del producto",
+                  "type": "file"
+                }
+              ]
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/mis-productos",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "mis-productos"
+              ]
+            },
+            "description": "Crea un producto destacado (oferta del dÃ­a) con destacado=1."
+          },
+          "response": []
+        },
+        {
+          "name": "RF6 - Test 7 - GET Mis Productos",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "TOKEN_VENDEDOR",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/mis-productos",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "mis-productos"
+              ]
+            },
+            "description": "Lista todos los productos del vendedor (activos e inactivos) con sus cremas asociadas."
+          },
+          "response": []
+        },
+        {
+          "name": "RF6 - Test 8 - PATCH Desactivar Producto",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "TOKEN_VENDEDOR",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"activo\": false\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/mis-productos/1",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "mis-productos",
+                "1"
+              ]
+            },
+            "description": "Desactiva un producto especÃ­fico por ID. TambiÃ©n se puede usar para actualizar nombre, precio, descripciÃ³n, etc."
+          },
+          "response": []
+        },
+        {
+          "name": "RF6 - Test 9 - GET Menú SIN Login (Público)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/menu/1",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "menu",
+                "1"
+              ]
+            },
+            "description": "Ver el menÃº pÃºblico de un puesto. Se puede usar el ID o el slug del puesto. No requiere autenticaciÃ³n."
+          },
+          "response": []
+        },
+        {
+          "name": "RF6 - Test 10 - GET Menú CON Login",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "TOKEN_CLIENTE",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/menu/1",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "menu",
+                "1"
+              ]
+            },
+            "description": "Ver el menÃº de un puesto como usuario autenticado. Retorna usuario_autenticado: true."
+          },
+          "response": []
+        },
+        {
+          "name": "RF6 - Crear Puesto (POST /stalls)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "TOKEN_VENDEDOR",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Puesto de Prueba Postman\",\n    \"seller_id\": 2\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/stalls",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "stalls"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "RF6 - Obtener QR del puesto (GET /stalls/{stall}/qr)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "TOKEN_VENDEDOR",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/stalls/1/qr",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "stalls",
+                "1",
+                "qr"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "RF8 - Cremas / Acompañamientos",
+      "item": [
+        {
+          "name": "RF8 - Test 1 - Crear Crema (Topping)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "TOKEN_VENDEDOR",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"nombre\": \"Crema de AjÃ­\",\n    \"precio_adicional\": 1.50,\n    \"descripcion\": \"Crema de ajÃ­ amarillo casera\",\n    \"activa\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/mis-cremas",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "mis-cremas"
+              ]
+            },
+            "description": "Crea una nueva crema/acompaÃ±amiento para el puesto del vendedor."
+          },
+          "response": []
+        },
+        {
+          "name": "RF8 - Test 2 - Listar Mis Cremas",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "TOKEN_VENDEDOR",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/mis-cremas",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "mis-cremas"
+              ]
+            },
+            "description": "Lista todas las cremas/acompaÃ±amientos del vendedor con cantidad de productos asociados."
+          },
+          "response": []
+        },
+        {
+          "name": "RF8 - Test 3 - Actualizar Crema",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "TOKEN_VENDEDOR",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"nombre\": \"Crema de AjÃ­ Especial\",\n    \"precio_adicional\": 2.00,\n    \"descripcion\": \"Crema de ajÃ­ mejorada con rocoto\",\n    \"activa\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/mis-cremas/1",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "mis-cremas",
+                "1"
+              ]
+            },
+            "description": "Actualiza una crema existente. Todos los campos son opcionales."
+          },
+          "response": []
+        },
+        {
+          "name": "RF8 - Test 4 - Eliminar Crema",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "TOKEN_VENDEDOR",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/mis-cremas/1",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "mis-cremas",
+                "1"
+              ]
+            },
+            "description": "Elimina una crema y la desasocia de todos los productos."
+          },
+          "response": []
+        },
+        {
+          "name": "RF8 - Test 5 - Asociar Crema a Producto",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "TOKEN_VENDEDOR",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"crema_id\": 1,\n    \"requerida\": false\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/mis-productos/1/cremas",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "mis-productos",
+                "1",
+                "cremas"
+              ]
+            },
+            "description": "Asocia una crema existente a un producto. La crema debe pertenecer al mismo puesto."
+          },
+          "response": []
+        },
+        {
+          "name": "RF8 - Test 6 - Ver Cremas de un Producto",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "TOKEN_VENDEDOR",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/mis-productos/1/cremas",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "mis-productos",
+                "1",
+                "cremas"
+              ]
+            },
+            "description": "Lista todas las cremas activas asociadas a un producto especÃ­fico."
+          },
+          "response": []
+        },
+        {
+          "name": "RF8 - Test 7 - Desasociar Crema de Producto",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "TOKEN_VENDEDOR",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/mis-productos/1/cremas/1",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "mis-productos",
+                "1",
+                "cremas",
+                "1"
+              ]
+            },
+            "description": "Desasocia una crema de un producto especÃ­fico. No elimina la crema, solo quita la relaciÃ³n."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "RF9 - Menú Offline",
+      "item": [
+        {
+          "name": "RF9 - Descargar Menú Offline",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "TOKEN_VENDEDOR",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/mis-productos/offline",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "mis-productos",
+                "offline"
+              ]
+            },
+            "description": "Descarga los productos activos del vendedor para uso offline."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "RF10 - Horarios y Pausas",
+      "item": [
+        {
+          "name": "RF10 - Test 1 - Ver horarios del puesto",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "TOKEN_VENDEDOR",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/mis-puesto/horarios",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "mis-puesto",
+                "horarios"
+              ]
+            },
+            "description": "Obtiene horarios actuales del puesto (apertura, cierre, estado abierto/pausa)."
+          },
+          "response": []
+        },
+        {
+          "name": "RF10 - Test 2 - Actualizar horario de apertura y cierre",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "TOKEN_VENDEDOR",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"horario_apertura\": \"10:00\",\n    \"horario_cierre\": \"23:30\",\n    \"activo\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/mis-puesto/horarios",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "mis-puesto",
+                "horarios"
+              ]
+            },
+            "description": "Actualiza el horario de apertura y cierre del puesto."
+          },
+          "response": []
+        },
+        {
+          "name": "RF10 - Test 3 - Crear pausa temporal",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "TOKEN_VENDEDOR",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"razon\": \"Descanso para almuerzo\",\n    \"inicio\": \"2026-03-03 13:00\",\n    \"fin\": \"2026-03-03 14:00\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/mis-puesto/pausas",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "mis-puesto",
+                "pausas"
+              ]
+            },
+            "description": "Crea una pausa temporal para el puesto (descanso, mantenimiento, etc.)."
+          },
+          "response": []
+        },
+        {
+          "name": "RF10 - Test 4 - Listar pausas del puesto",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "TOKEN_VENDEDOR",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/mis-puesto/pausas",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "mis-puesto",
+                "pausas"
+              ]
+            },
+            "description": "Lista todas las pausas del puesto (historial completo)."
+          },
+          "response": []
+        },
+        {
+          "name": "RF10 - Test 5 - Actualizar pausa existente",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "TOKEN_VENDEDOR",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"razon\": \"Descanso para almuerzo - extendido\",\n    \"fin\": \"2026-03-03 14:30\",\n    \"activa\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/mis-puesto/pausas/1",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "mis-puesto",
+                "pausas",
+                "1"
+              ]
+            },
+            "description": "Actualiza una pausa existente (razÃ³n, horario o estado)."
+          },
+          "response": []
+        },
+        {
+          "name": "RF10 - Test 6 - Eliminar pausa",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "TOKEN_VENDEDOR",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/mis-puesto/pausas/1",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "mis-puesto",
+                "pausas",
+                "1"
+              ]
+            },
+            "description": "Elimina/cancela una pausa temporal."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "RF11 - Pedidos y Pagos",
+      "item": [
+        {
+          "name": "RF11 - Test 1 - Crear pedido (sin pagar)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "TOKEN_CLIENTE",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"stall_id\": 1,\n    \"productos\": [\n        {\n            \"producto_id\": 1,\n            \"cantidad\": 2,\n            \"cremas\": [1, 2]\n        },\n        {\n            \"producto_id\": 2,\n            \"cantidad\": 1\n        }\n    ],\n    \"direccion\": \"Jr. Manco CÃ¡pac 456, La BreÃ±a, Lima\",\n    \"with_delivery\": true,\n    \"delivery_latitude\": -12.0600,\n    \"delivery_longitude\": -77.0400,\n    \"notas\": \"Sin cebolla por favor\",\n    \"invoice_requested\": false\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/pedidos",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "pedidos"
+              ]
+            },
+            "description": "Crea un pedido en estado 'pending' sin procesar pago. Requiere token de cliente. Calcula subtotal, IGV (18%), delivery y tiempo estimado."
+          },
+          "response": []
+        },
+        {
+          "name": "RF11 - Test 2 - Procesar pago del pedido",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "TOKEN_CLIENTE",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"metodo_pago\": \"mock\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/pedidos/1/pagar",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "pedidos",
+                "1",
+                "pagar"
+              ]
+            },
+            "description": "Procesa el pago de un pedido pendiente. MÃ©todos: mock, yape, plin. Se procesa async en queue. Responde 202 Accepted."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "RF12 - Detalle de Pedidos",
+      "item": [
+        {
+          "name": "RF12 - Test 3 - Obtener detalle del pedido",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "TOKEN_CLIENTE",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/pedidos/1",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "pedidos",
+                "1"
+              ]
+            },
+            "description": "Obtiene detalle completo del pedido incluyendo items, pago y timeline de estados."
+          },
+          "response": []
+        },
+        {
+          "name": "RF12 - Test 4 - Listar todos mis pedidos",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "TOKEN_CLIENTE",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/pedidos?page=1",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "pedidos"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                }
+              ]
+            },
+            "description": "Lista todos los pedidos del cliente autenticado con paginaciÃ³n (10 por pÃ¡gina)."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "RF13 - Tiempos de Preparación",
+      "item": [
+        {
+          "name": "RF13 - Configurar tiempos de preparación",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "TOKEN_VENDEDOR",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"base_preparation_time\": 15,\n    \"time_per_product\": 5,\n    \"time_per_active_order\": 5,\n    \"time_for_delivery\": 10\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/mis-puesto/tiempos-preparacion",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "mis-puesto",
+                "tiempos-preparacion"
+              ]
+            },
+            "description": "Configura los tiempos base de preparaciÃ³n del puesto para el cÃ¡lculo de tiempo estimado de entrega."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "RF14 - Estados del Pedido",
+      "item": [
+        {
+          "name": "RF14 - Test 1 - Ver pedidos activos del puesto (confirmed)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "TOKEN_VENDEDOR",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/mis-pedidos",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "mis-pedidos"
+              ]
+            },
+            "description": "Lista pedidos activos del puesto (confirmed, preparing, ready). Requiere token de vendedor."
+          },
+          "response": []
+        },
+        {
+          "name": "RF14 - Test 2 - Cambiar estado a PREPARING",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "TOKEN_VENDEDOR",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"nuevo_estado\": \"preparing\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/pedidos/1/cambiar-estado",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "pedidos",
+                "1",
+                "cambiar-estado"
+              ]
+            },
+            "description": "Cambia el estado del pedido a 'preparing' (comenzar preparaciÃ³n). TransiciÃ³n: confirmed â†’ preparing."
+          },
+          "response": []
+        },
+        {
+          "name": "RF14 - Test 3 - Cambiar estado a READY",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "TOKEN_VENDEDOR",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"nuevo_estado\": \"ready\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/pedidos/1/cambiar-estado",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "pedidos",
+                "1",
+                "cambiar-estado"
+              ]
+            },
+            "description": "Cambia el estado a 'ready' (pedido listo para recoger/enviar). TransiciÃ³n: preparing â†’ ready."
+          },
+          "response": []
+        },
+        {
+          "name": "RF14 - Test 4 - Cambiar estado a EN_CAMINO",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "TOKEN_VENDEDOR",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"nuevo_estado\": \"en_camino\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/pedidos/1/cambiar-estado",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "pedidos",
+                "1",
+                "cambiar-estado"
+              ]
+            },
+            "description": "Cambia el estado a 'en_camino' (en camino de entrega, si tiene delivery). TransiciÃ³n: ready â†’ en_camino."
+          },
+          "response": []
+        },
+        {
+          "name": "RF14 - Test 5 - Cambiar estado a DELIVERED",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "TOKEN_VENDEDOR",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"nuevo_estado\": \"delivered\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/pedidos/1/cambiar-estado",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "pedidos",
+                "1",
+                "cambiar-estado"
+              ]
+            },
+            "description": "Cambia el estado a 'delivered' (pedido entregado). TransiciÃ³n: ready â†’ delivered o en_camino â†’ delivered."
+          },
+          "response": []
+        },
+        {
+          "name": "RF14 - Test 6 - Ver timeline completo (como cliente)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "TOKEN_CLIENTE",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/pedidos/1",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "pedidos",
+                "1"
+              ]
+            },
+            "description": "Ver detalle completo del pedido con timeline de todos los estados y timestamps."
+          },
+          "response": []
+        },
+        {
+          "name": "RF14 - Test 7 - Error: Transición inválida",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "TOKEN_VENDEDOR",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"nuevo_estado\": \"pending\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/pedidos/1/cambiar-estado",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "pedidos",
+                "1",
+                "cambiar-estado"
+              ]
+            },
+            "description": "Intenta una transiciÃ³n invÃ¡lida para probar la validaciÃ³n. Debe retornar error 409 con transiciones permitidas."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "RF15 - Cancelar Pedido",
+      "item": [
+        {
+          "name": "RF15 - Cancelar pedido (como cliente)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "TOKEN_CLIENTE",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"motivo\": \"Ya no quiero el pedido\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/pedidos/1/cancelar",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "pedidos",
+                "1",
+                "cancelar"
+              ]
+            },
+            "description": "Cancela un pedido. Solo permitido en estados: pending, confirmed, preparing. Si hubo pago se reembolsa."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "RF16 - Cambiar Dirección",
+      "item": [
+        {
+          "name": "RF16 - Cambiar dirección de entrega",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "TOKEN_CLIENTE",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"nueva_direccion\": \"Av. Arequipa 1234, Lince, Lima\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/pedidos/1/cambiar-direccion",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "pedidos",
+                "1",
+                "cambiar-direccion"
+              ]
+            },
+            "description": "Cambia la direcciÃ³n de entrega. Solo permitido en estados: pending, confirmed. MÃ­nimo 10 caracteres."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "RF17 - Pedidos del Vendedor",
+      "item": [
+        {
+          "name": "RF17 - Ver pedidos activos del puesto (vendedor)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "TOKEN_VENDEDOR",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/mis-pedidos",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "mis-pedidos"
+              ]
+            },
+            "description": "Lista pedidos activos del puesto del vendedor (confirmed, preparing, ready) con datos del cliente."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "RF18 - Comisiones",
+      "item": [
+        {
+          "name": "RF18 - Calcular comisión de un pedido",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "TOKEN_VENDEDOR",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"order_id\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/comisiones/calcular",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "comisiones",
+                "calcular"
+              ]
+            },
+            "description": "Calcula la comisiÃ³n de un pedido confirmado (pagado). Retorna monto, porcentaje, neto vendedor."
+          },
+          "response": []
+        },
+        {
+          "name": "RF18 - Obtener comisión de un pedido",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "TOKEN_VENDEDOR",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/comisiones/pedido/1",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "comisiones",
+                "pedido",
+                "1"
+              ]
+            },
+            "description": "Obtiene la comisiÃ³n calculada para un pedido especÃ­fico."
+          },
+          "response": []
+        },
+        {
+          "name": "RF18 - Listar reglas de comisión (admin)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "TOKEN_ADMIN",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/comisiones/reglas",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "comisiones",
+                "reglas"
+              ]
+            },
+            "description": "Lista todas las reglas de comisiÃ³n configuradas. Solo admin."
+          },
+          "response": []
+        },
+        {
+          "name": "RF18 - Crear regla de comisión (admin)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "TOKEN_ADMIN",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"ComisiÃ³n estÃ¡ndar\",\n    \"percentage\": 10,\n    \"min_order_amount\": 0,\n    \"max_order_amount\": 999999,\n    \"is_active\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/comisiones/reglas",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "comisiones",
+                "reglas"
+              ]
+            },
+            "description": "Crea una nueva regla de comisiÃ³n. Solo admin."
+          },
+          "response": []
+        },
+        {
+          "name": "RF18 - Actualizar regla de comisión (admin)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "TOKEN_ADMIN",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"ComisiÃ³n premium\",\n    \"percentage\": 15,\n    \"is_active\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/comisiones/reglas/1",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "comisiones",
+                "reglas",
+                "1"
+              ]
+            },
+            "description": "Actualiza una regla de comisiÃ³n existente. Solo admin."
+          },
+          "response": []
+        },
+        {
+          "name": "RF18 - Eliminar regla de comisión (admin)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "TOKEN_ADMIN",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/comisiones/reglas/1",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "comisiones",
+                "reglas",
+                "1"
+              ]
+            },
+            "description": "Elimina una regla de comisiÃ³n. Solo admin."
+          },
+          "response": []
+        },
+        {
+          "name": "RF18 - Reporte de comisiones (admin)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "TOKEN_ADMIN",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/comisiones/reporte",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "comisiones",
+                "reporte"
+              ]
+            },
+            "description": "Genera reporte de comisiones. Solo admin."
+          },
+          "response": []
+        },
+        {
+          "name": "RF18 - Auditoría de comisiones (admin)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "TOKEN_ADMIN",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/comisiones/auditoria",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "comisiones",
+                "auditoria"
+              ]
+            },
+            "description": "Consulta logs de auditorÃ­a de comisiones. Solo admin."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "RF20 - Transferencias",
+      "item": [
+        {
+          "name": "RF20 - Transferir comisiones pendientes (admin)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "TOKEN_ADMIN",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/comisiones/transferir",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "comisiones",
+                "transferir"
+              ]
+            },
+            "description": "Transfiere comisiones pendientes a los vendedores. Solo admin."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "RF21 - Comprobantes Electrónicos",
+      "item": [
+        {
+          "name": "RF21 - Generar comprobante para pedido",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "TOKEN_CLIENTE",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/comprobantes/generar/1",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "comprobantes",
+                "generar",
+                "1"
+              ]
+            },
+            "description": "Genera manualmente un comprobante electrÃ³nico para un pedido."
+          },
+          "response": []
+        },
+        {
+          "name": "RF21 - Descargar comprobante PDF",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "TOKEN_CLIENTE",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/pdf",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/comprobantes/1/pdf",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "comprobantes",
+                "1",
+                "pdf"
+              ]
+            },
+            "description": "Descarga el comprobante en formato PDF."
+          },
+          "response": []
+        },
+        {
+          "name": "RF21 - Descargar comprobante XML",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "TOKEN_CLIENTE",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/xml",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/comprobantes/1/xml",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "comprobantes",
+                "1",
+                "xml"
+              ]
+            },
+            "description": "Descarga el comprobante en formato XML."
+          },
+          "response": []
+        },
+        {
+          "name": "RF21 - Reintentar generación de comprobante (admin)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "TOKEN_ADMIN",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/comprobantes/1/reintentar",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "comprobantes",
+                "1",
+                "reintentar"
+              ]
+            },
+            "description": "Reintenta la generaciÃ³n de un comprobante fallido. Admin."
+          },
+          "response": []
+        },
+        {
+          "name": "RF21 - Listar comprobantes",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "TOKEN_CLIENTE",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/comprobantes",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "comprobantes"
+              ]
+            },
+            "description": "Lista comprobantes. Clientes ven los suyos, admin ve todos."
+          },
+          "response": []
+        },
+        {
+          "name": "RF21 - Ver detalle de comprobante",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "TOKEN_CLIENTE",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/comprobantes/1",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "comprobantes",
+                "1"
+              ]
+            },
+            "description": "Obtiene el detalle de un comprobante especÃ­fico."
+          },
+          "response": []
+        },
+        {
+          "name": "RF21 - Comprobante de un pedido (porPedido)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "TOKEN_CLIENTE",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/comprobantes/pedido/1",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "comprobantes",
+                "pedido",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "RF28-RF32 - Geo y Mapa",
+      "item": [
+        {
+          "name": "RF28 - Puestos cercanos (nearby)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/puestos/nearby",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "puestos",
+                "nearby"
+              ],
+              "query": [
+                {
+                  "key": "lat",
+                  "value": "-12.0464",
+                  "description": "Latitud del usuario"
+                },
+                {
+                  "key": "lng",
+                  "value": "-77.0428",
+                  "description": "Longitud del usuario"
+                },
+                {
+                  "key": "radius",
+                  "value": "2",
+                  "description": "Radio en km (0.1 - 50)"
+                },
+                {
+                  "key": "open_now",
+                  "value": "false"
+                },
+                {
+                  "key": "sort",
+                  "value": "distance",
+                  "description": "distance | popularity"
+                },
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "per_page",
+                  "value": "10"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "RF28 - Listado de puestos con filtros (GET /puestos)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/puestos",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "puestos"
+              ],
+              "query": [
+                {
+                  "key": "lat",
+                  "value": "-12.0464"
+                },
+                {
+                  "key": "lng",
+                  "value": "-77.0428"
+                },
+                {
+                  "key": "radius",
+                  "value": "5"
+                },
+                {
+                  "key": "open_now",
+                  "value": "false"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "RF29 - Marcadores para mapa (map-markers)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/puestos/map-markers",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "puestos",
+                "map-markers"
+              ],
+              "query": [
+                {
+                  "key": "lat",
+                  "value": "-12.0464"
+                },
+                {
+                  "key": "lng",
+                  "value": "-77.0428"
+                },
+                {
+                  "key": "radius",
+                  "value": "2"
+                },
+                {
+                  "key": "open_now",
+                  "value": "false"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "RF31 - Estado del puesto (status)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/puestos/1/status",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "puestos",
+                "1",
+                "status"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "RF30 - Puesto + menú para mapa (map)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/puestos/1/map",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "puestos",
+                "1",
+                "map"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "RF30 - Menú del puesto (menu)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/puestos/1/menu",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "puestos",
+                "1",
+                "menu"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "RF32 - Direcciones Google Maps (directions)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/puestos/1/directions",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "puestos",
+                "1",
+                "directions"
+              ],
+              "query": [
+                {
+                  "key": "from_lat",
+                  "value": "-12.0464"
+                },
+                {
+                  "key": "from_lng",
+                  "value": "-77.0428"
+                },
+                {
+                  "key": "mode",
+                  "value": "driving",
+                  "description": "driving | walking | bicycling"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "RF32 - Ruta estimada (route)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/puestos/1/route",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "puestos",
+                "1",
+                "route"
+              ],
+              "query": [
+                {
+                  "key": "from_lat",
+                  "value": "-12.0464"
+                },
+                {
+                  "key": "from_lng",
+                  "value": "-77.0428"
+                },
+                {
+                  "key": "mode",
+                  "value": "driving"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Notificaciones",
+      "item": [
+        {
+          "name": "Listar notificaciones",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "TOKEN_CLIENTE",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/notificaciones",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "notificaciones"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Contador de no leídas",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "TOKEN_CLIENTE",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/notificaciones/contador",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "notificaciones",
+                "contador"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Marcar como leída",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "TOKEN_CLIENTE",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/notificaciones/1/leer",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "notificaciones",
+                "1",
+                "leer"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Marcar todas como leídas",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "TOKEN_CLIENTE",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/notificaciones/leer-todas",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "notificaciones",
+                "leer-todas"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Ayuda / Soporte",
+      "item": [
+        {
+          "name": "Centro de ayuda (público)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/ayuda",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "ayuda"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Configuración de Usuario",
+      "item": [
+        {
+          "name": "Ver configuración",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "TOKEN_CLIENTE",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/configuracion",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "configuracion"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Actualizar configuración",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "TOKEN_CLIENTE",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"tema\": \"oscuro\",\n    \"idioma\": \"es\",\n    \"notificaciones\": {\n        \"push\": true,\n        \"promociones\": false,\n        \"sonido\": true,\n        \"vibracion\": false\n    },\n    \"unidades\": \"metric\",\n    \"moneda\": \"soles\",\n    \"seguridad\": {\n        \"biometria\": false\n    }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/configuracion",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "configuracion"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Notificaciones Push (FCM)",
+      "item": [
+        {
+          "name": "Registrar token del dispositivo",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "TOKEN_CLIENTE",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"fcm_token\": \"TU_FCM_TOKEN_AQUI\",\n    \"platform\": \"android\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/dispositivos/token",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "dispositivos",
+                "token"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Listar tokens del dispositivo",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "TOKEN_CLIENTE",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/dispositivos/token",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "dispositivos",
+                "token"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Eliminar token del dispositivo",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "TOKEN_CLIENTE",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"fcm_tokens\": [\n        \"TU_FCM_TOKEN_AQUI\"\n    ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/dispositivos/token",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "dispositivos",
+                "token"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Probar push de prueba",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "TOKEN_CLIENTE",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"titulo\": \"🔔 Notificación de prueba\",\n    \"cuerpo\": \"Push de prueba desde Postman\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/dispositivos/probar-push",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "dispositivos",
+                "probar-push"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
 }

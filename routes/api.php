@@ -11,6 +11,7 @@ use App\Http\Controllers\VendedorController;
 use App\Http\Controllers\StallScheduleController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\TestTokenController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\CommissionController;
 use App\Http\Controllers\Auth\ApiRegisterController;
 use App\Http\Controllers\Auth\ApiLoginController;
@@ -188,8 +189,35 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/comprobantes/{invoice_id}/reintentar', [\App\Http\Controllers\InvoiceController::class, 'resend']);
     // Listar comprobantes (clientes listan los suyos; admin lista todo)
     Route::get('/comprobantes', [\App\Http\Controllers\InvoiceController::class, 'index']);
+    // Comprobante de un pedido específico (polling del frontend) — va ANTES de {invoice_id}
+    Route::get('/comprobantes/pedido/{order_id}', [\App\Http\Controllers\InvoiceController::class, 'porPedido']);
     Route::get('/comprobantes/{invoice_id}', [\App\Http\Controllers\InvoiceController::class, 'show']);
+});
+
+// ========== NOTIFICACIONES ==========
+Route::middleware(['auth:sanctum'])->group(function () {
+    Route::get('/notificaciones', [NotificationController::class, 'index']);
+    Route::get('/notificaciones/contador', [NotificationController::class, 'contador']);
+    Route::patch('/notificaciones/{id}/leer', [NotificationController::class, 'marcarLeida']);
+    Route::post('/notificaciones/leer-todas', [NotificationController::class, 'marcarTodasLeidas']);
 });
 
 // ========== RF4: DASHBOARD ==========
 Route::middleware(['auth:sanctum'])->get('/dashboard', [\App\Http\Controllers\DashboardController::class, 'index']);
+
+// ========== AYUDA / SOPORTE ==========
+Route::get('/ayuda', [\App\Http\Controllers\HelpController::class, 'index']);
+
+// ========== CONFIGURACIÓN DE USUARIO ==========
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/configuracion', [\App\Http\Controllers\ConfigController::class, 'index']);
+    Route::put('/configuracion', [\App\Http\Controllers\ConfigController::class, 'update']);
+});
+
+// ========== NOTIFICACIONES PUSH (FCM) ==========
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/dispositivos/token', [\App\Http\Controllers\DeviceTokenController::class, 'registrar']);
+    Route::delete('/dispositivos/token', [\App\Http\Controllers\DeviceTokenController::class, 'eliminar']);
+    Route::get('/dispositivos/token', [\App\Http\Controllers\DeviceTokenController::class, 'listar']);
+    Route::post('/dispositivos/probar-push', [\App\Http\Controllers\DeviceTokenController::class, 'probarPush']);
+});
